@@ -31,8 +31,13 @@ namespace Template
                         if (scene.primitives[z].Intersect(camera.CreatePrimaryRay(x, y), out k))
                         {
                             intersectionList.Add(k);
+                            display.pixels[x + y * display.width] = CreateColor((int)k.nearestPrimitive.color.X, (int)k.nearestPrimitive.color.Y, (int)k.nearestPrimitive.color.Z);
                         }
                     }
+        }
+        int CreateColor(int red, int green, int blue)
+        {
+            return (red << 16) + (green << 8) + blue;
         }
     }
 }

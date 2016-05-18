@@ -26,5 +26,9 @@ namespace Template
             }
             return new Vector3(0, 0, 0);
         }
+        public void AddPrimitive(Primitive p)
+        {
+            primitives.Add(p);
+        }
     }
 }

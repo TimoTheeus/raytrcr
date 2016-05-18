@@ -39,6 +39,7 @@ namespace Template
             point = ray.Origin + (distance * ray.Direction);
             intersection = new Intersection(point, distance, this, (-c.Normalized()));
             return true;
-        }
+        }
+
     }
 }

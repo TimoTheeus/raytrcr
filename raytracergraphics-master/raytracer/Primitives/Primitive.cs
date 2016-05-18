@@ -9,7 +9,7 @@ namespace Template
 {
     class Primitive
     {
-        protected Vector3 color;
+        public Vector3 color;
      
         public Primitive(Vector3 c)
         {
