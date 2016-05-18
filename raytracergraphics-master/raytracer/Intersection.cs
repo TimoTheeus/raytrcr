@@ -10,14 +10,14 @@ namespace Template
     class Intersection
     {
         //where the intersection occurred
-        protected Vector3 point;
+        public Vector3 point;
 
         /// The surface's normal at the intersection point
-        protected Vector3 normal;
-        
-        protected Primitive nearestPrimitive;
+        public Vector3 normal;
+
+        public Primitive nearestPrimitive;
         // The distance at which the intersection occurred.
-        protected float distance;
+        public float distance;
 
         public Intersection(Vector3 p, float d, Primitive nearestP, Vector3 n)
         {

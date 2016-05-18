@@ -15,5 +15,10 @@ namespace Template
         {
             color = c;
         }
+        public virtual bool Intersect(Ray r, out Intersection intersection)
+        {
+            intersection = null;
+            return true;
+        }
     }
 }

@@ -20,7 +20,7 @@ class Game
             lightList = new List<Light>();
             primitiveList = new List<Primitive>();
             s = new Scene(primitiveList,lightList);
-            cam = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 1));
+            cam = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 1),1/((float)screen.width),1/((float)screen.height));
             r = new Raytracer(s,cam,screen);
 	    }
 	    // tick: renders one frame

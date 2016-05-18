@@ -7,17 +7,18 @@ using OpenTK;
 
 namespace Template
 {
+    //Class for rays, direction is normalized in constructor
     class Ray
     {
-        public readonly Vector3 Origin;
-        public readonly Vector3 Direction;
-        public readonly float Distance;
+        public Vector3 Origin;
+        public Vector3 Direction;
+        public float distance;
 
-        public Ray(Vector3 start, Vector3 direction, float distance)
+        public Ray(Vector3 start, Vector3 direction,float distance)
         {
             this.Origin = start;
-            this.Direction = direction;
-            this.Distance = distance;
+            this.Direction = direction.Normalized();
+            this.distance = distance;
         }
     }
 }
