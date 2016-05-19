@@ -11,9 +11,9 @@ namespace Template
     {
         protected Raytracer raytracer;
 
-        public Application()
+        public Application(Raytracer raytracer)
         {
-
+            this.raytracer = raytracer;
         }
         public void Visualize()
         {

@@ -26,14 +26,13 @@ namespace Template
             Intersection k;
             for (int x = 0; x < display.width; x++)
                 for (int y = 0; y < display.height; y++)
-                    for (int z = 0; z < scene.primitives.Count; z++)
-                    {
-                        if (scene.primitives[z].Intersect(camera.CreatePrimaryRay(x, y), out k))
-                        {
-                            intersectionList.Add(k);
-                            display.pixels[x + y * display.width] = CreateColor((int)k.nearestPrimitive.color.X, (int)k.nearestPrimitive.color.Y, (int)k.nearestPrimitive.color.Z);
-                        }
-                    }
+                {
+                    Ray ray = camera.CreatePrimaryRay(x, y);
+                    float distance = ray.distance;
+                    k=scene.ReturnClosestIntersection(ray);
+                    if(ray.distance<distance)
+                    display.pixels[x + y * display.width] = CreateColor((int)k.nearestPrimitive.color.X, (int)k.nearestPrimitive.color.Y, (int)k.nearestPrimitive.color.Z);
+                }
         }
         int CreateColor(int red, int green, int blue)
         {

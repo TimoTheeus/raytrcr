@@ -13,6 +13,7 @@ namespace Template
         public Vector3 Origin;
         public Vector3 Direction;
         public float distance;
+        public Primitive nearestPrimitive;
 
         public Ray(Vector3 start, Vector3 direction,float distance)
         {

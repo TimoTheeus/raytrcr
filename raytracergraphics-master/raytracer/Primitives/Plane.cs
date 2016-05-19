@@ -10,26 +10,25 @@ namespace Template
     //Defined by a normalized normal and a distance to the origin
     class Plane:Primitive
     {
-        public Vector3 normal;
         public float distanceToOrigin;
 
         public Plane(Vector3 n, float dToOrigin,Vector3 color):base(color)
         {
-            normal = n.Normalized();
-            distanceToOrigin = dToOrigin;
-            this.color = new Vector3(255, 0, 0);
+            this.normal = n.Normalized();
+            this.distanceToOrigin = dToOrigin;
         }
-        public override bool Intersect(Ray r,out Intersection intersection)
+        public override void Intersect(Ray ray)
         {
-            float distance = (Vector3.Dot(r.Origin, this.normal) + this.distanceToOrigin) / Vector3.Dot(r.Direction, this.normal);
+            float distance = (Vector3.Dot(ray.Origin, this.normal) + this.distanceToOrigin) / Vector3.Dot(ray.Direction, this.normal);
             if(distance<=0)
             {
-                intersection = null;
-                return false;
+                return;
             }
-            Vector3 point = r.Origin + (distance * r.Direction);
-            intersection = new Intersection(point,distance,this,this.normal);
-            return true;
+            if (distance < ray.distance)
+            {
+                ray.distance = distance;
+                ray.nearestPrimitive = this;
+            }
         }
     }
 }

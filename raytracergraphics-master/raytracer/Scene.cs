@@ -17,14 +17,19 @@ namespace Template
             lightsources = lList;
         }
 
-        public Vector3 Intersection(Ray ray)
+        public Intersection ReturnClosestIntersection(Ray ray)
         {
-            Primitive k;
-            foreach (Primitive p in primitives)
+            for (int i = 0; i < primitives.Count; i++)
             {
-
+                primitives[i].Intersect(ray);
             }
-            return new Vector3(0, 0, 0);
+            Vector3 point = ray.Origin + (ray.distance * ray.Direction);
+            if (ray.distance < 100f) 
+            return new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal);
+            else
+            {
+                return new Intersection(point, ray.distance, ray.nearestPrimitive, Vector3.Zero);
+            }
         }
         public void AddPrimitive(Primitive p)
         {

@@ -10,15 +10,15 @@ namespace Template
     class Primitive
     {
         public Vector3 color;
+        public Vector3 normal;
      
         public Primitive(Vector3 c)
         {
             color = c;
         }
-        public virtual bool Intersect(Ray r, out Intersection intersection)
+        public virtual void Intersect(Ray ray)
         {
-            intersection = null;
-            return true;
+            
         }
     }
 }
