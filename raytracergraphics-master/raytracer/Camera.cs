@@ -12,7 +12,31 @@ namespace Template
         //member variables
         public Vector3 position;
         public Vector3 direction;
-        public float fieldOfView;
+        public Vector3 viewDirection;
+        Vector3 left, right, up, down;
+        public double AppliedFieldOfView
+        {
+            get {
+                return 1 / Math.Tan(fieldOfView / 2);
+            }
+        }
+        public Vector3 Left
+        {
+            get { return Vector3.Normalize(-Vector3.Cross(viewDirection, up)); }
+        }
+        public Vector3 Up
+        {
+            get { return Vector3.Cross(viewDirection, left); }
+        }
+        public Vector3 Right
+        {
+            get { return -Left; }
+        }
+        public Vector3 Down
+        {
+            get { return -Up; }
+        }
+        public double fieldOfView;
         float displayWidth;
         float displayHeight;
 
@@ -20,25 +44,31 @@ namespace Template
         {
             position = pos;
             direction = dir;
-            fieldOfView = 1;
+            viewDirection = Vector3.Normalize(direction - position);
+            fieldOfView = Math.PI*0.5;
             displayWidth = screenWidth;
             displayHeight = screenHeight;
+            left = new Vector3(-1, 0, 0);
+            right = new Vector3(1, 0, 0);
+            up = new Vector3(0, -1, 0);
+            down = new Vector3(0, 1, 0);
+            
         }
         public Vector3 Upperleft
         {
-            get { return (Center + new Vector3(-1, -1, 0)); }
+            get { return (Center +Up+Left); }
         }
         public Vector3 Upperright
         {
-            get { return (Center + new Vector3(1, -1, 0)); }
+            get { return (Center + Up+Right); }
         }
         public Vector3 Downleft
         {
-            get { return (Center + new Vector3(-1, 1, 0)); }
+            get { return (Center + Down+Left); }
         }
         public Vector3 Center
         {
-            get { return (position + fieldOfView * direction); }
+            get { return (position + (float)AppliedFieldOfView * viewDirection); }
         }
         public Ray CreatePrimaryRay(int x, int y)
         {
