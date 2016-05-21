@@ -9,9 +9,9 @@ namespace Template
 {
     class Raytracer
     {
-        protected Scene scene;
-        protected Camera camera;
-        protected Surface display;
+        public Scene scene;
+        public Camera camera;
+        public Surface display;
         List<Intersection> intersectionList;
 
         public Raytracer(Scene rs, Camera rc, Surface surface)
