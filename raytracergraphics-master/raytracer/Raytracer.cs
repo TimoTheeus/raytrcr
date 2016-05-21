@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System.Diagnostics;
+
 namespace Template
 {
     class Raytracer
@@ -13,14 +15,12 @@ namespace Template
         public Camera camera;
         public Surface display;
         List<Intersection> intersectionList;
-
         public Raytracer(Scene rs, Camera rc, Surface surface)
         {
             scene = rs;
             camera = rc;
             display = surface;
             intersectionList = new List<Intersection>();
-            
         }
         public void Render()
         {

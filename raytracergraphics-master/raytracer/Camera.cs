@@ -79,28 +79,28 @@ namespace Template
             Ray r = new Ray(this.position, direction,100f);
             return r;
         }
-        public void RotateRight()
+        public void RotateRight(double timeElapsed)
         {
             Vector3 target = position + viewDirection;
-            target += Vector3.Cross(Center,Up);
+            target += Vector3.Cross(Center,Up* (float)timeElapsed);
             viewDirection = Vector3.Normalize(target - position);
         }
-        public void RotateUp()
+        public void RotateUp(double timeElapsed)
         {
             Vector3 target = position + viewDirection;
-            target += Vector3.Cross(Center, Left);
+            target += Vector3.Cross(Center, Left * (float)timeElapsed);
             viewDirection = Vector3.Normalize(target - position);
         }
-        public void RotateLeft()
+        public void RotateLeft(double timeElapsed)
         {
             Vector3 target = position + viewDirection;
-            target += Vector3.Cross(Center, Down);
+            target += Vector3.Cross(Center, Down * (float)timeElapsed);
             viewDirection = Vector3.Normalize(target - position);
         }
-        public void RotateDown()
+        public void RotateDown(double timeElapsed)
         {
             Vector3 target = position + viewDirection;
-            target += Vector3.Cross(Center, Right);
+            target += Vector3.Cross(Center, Right * (float)timeElapsed);
             viewDirection = Vector3.Normalize(target - position);
         }
     }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Input;
 using OpenTK;
+using System.Diagnostics;
 
 namespace Template
 {
@@ -12,34 +13,41 @@ namespace Template
     class Application
     {
         protected Raytracer raytracer;
+        Stopwatch t;
 
         public Application(Raytracer raytracer)
         {
             this.raytracer = raytracer;
+            t = new Stopwatch();
         }
         public void Visualize()
         {
+            t.Reset();
+            t.Start();
             raytracer.Render();
-            HandleInput();
+            double timeElapsedMilliseconds = t.Elapsed.TotalMilliseconds;
+            t.Stop();
+            HandleInput(timeElapsedMilliseconds);
         }
-        public void HandleInput()
+        public void HandleInput(double timeElapsedMilliseconds)
         {
+            double timeElapsed = 150/timeElapsedMilliseconds;
             var state = Keyboard.GetState();
             if (state.IsKeyDown(Key.Right))
             {
-                raytracer.camera.RotateRight();
+                raytracer.camera.RotateRight(timeElapsed);
             }
             if (state.IsKeyDown(Key.Up))
             {
-                raytracer.camera.RotateUp();
+                raytracer.camera.RotateUp(timeElapsed);
             }
             if (state.IsKeyDown(Key.Down))
             {
-                raytracer.camera.RotateDown();
+                raytracer.camera.RotateDown(timeElapsed);
             }
             if (state.IsKeyDown(Key.Left))
             {
-                raytracer.camera.RotateLeft();
+                raytracer.camera.RotateLeft(timeElapsed);
             }
         }
     }
