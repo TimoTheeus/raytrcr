@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 namespace Template
 {
@@ -24,7 +25,6 @@ namespace Template
         }
         public override void Intersect(Ray ray)
         {
-            Vector3 point;
             Vector3 c = this.position - ray.Origin;
             float t = Vector3.Dot(c, ray.Direction);
             Vector3 q = c - t * ray.Direction;
@@ -39,7 +39,8 @@ namespace Template
                 ray.distance = t;
                 ray.nearestPrimitive = this;
                 this.normal = -c.Normalized();
-            }            //normal at the point is -c.Normalized
+            }
+            //normal at the point is -c.Normalized
         }
 
     }

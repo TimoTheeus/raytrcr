@@ -42,7 +42,7 @@ namespace Template
         }
         public Ray CreatePrimaryRay(int x, int y)
         {
-            float u = x * displayWidth;
+            float u = x * displayWidth*2;
             float v = y * displayHeight;
             Vector3 point = Upperleft + u * (Upperright - Upperleft) + v * (Downleft - Upperleft);
             Vector3 direction = point - this.position;

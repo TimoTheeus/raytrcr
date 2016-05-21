@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
-
+using OpenTK.Graphics.OpenGL;
 namespace Template
 {
     class Raytracer
@@ -20,11 +20,12 @@ namespace Template
             camera = rc;
             display = surface;
             intersectionList = new List<Intersection>();
+            
         }
         public void Render()
         {
             Intersection k;
-            for (int x = 0; x < display.width; x++)
+            for (int x = 0; x < display.width/2; x++)
                 for (int y = 0; y < display.height; y++)
                 {
                     Ray ray = camera.CreatePrimaryRay(x, y);
