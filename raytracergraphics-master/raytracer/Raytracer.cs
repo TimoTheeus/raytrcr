@@ -15,17 +15,19 @@ namespace Template
         public Camera camera;
         public Surface display;
         List<Intersection> intersectionList;
+        int halfDisplayWidth;
         public Raytracer(Scene rs, Camera rc, Surface surface)
         {
             scene = rs;
             camera = rc;
             display = surface;
             intersectionList = new List<Intersection>();
+            halfDisplayWidth = display.width / 2;
         }
         public void Render()
         {
             Intersection k;
-            for (int x = 0; x < display.width/2; x++)
+            for (int x = 0; x < halfDisplayWidth; x++)
                 for (int y = 0; y < display.height; y++)
                 {
                     Ray ray = camera.CreatePrimaryRay(x, y);

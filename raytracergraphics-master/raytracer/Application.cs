@@ -14,11 +14,13 @@ namespace Template
     {
         protected Raytracer raytracer;
         Stopwatch t;
+        double oneThousandth;
 
         public Application(Raytracer raytracer)
         {
             this.raytracer = raytracer;
             t = new Stopwatch();
+            oneThousandth = (double)(1m / 1000m);
         }
         public void Visualize()
         {
@@ -31,7 +33,7 @@ namespace Template
         }
         public void HandleInput(double timeElapsedMilliseconds)
         {
-            double timeElapsed = timeElapsedMilliseconds/1000;
+            double timeElapsed = (timeElapsedMilliseconds* oneThousandth);
             var state = Keyboard.GetState();
             if (state.IsKeyDown(Key.Right))
             {

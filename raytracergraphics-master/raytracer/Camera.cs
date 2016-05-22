@@ -14,12 +14,6 @@ namespace Template
         public Vector3 direction;
         public Vector3 viewDirection;
         Vector3 left, right, up, down;
-        public double AppliedFieldOfView
-        {
-            get {
-                return 1 / Math.Tan(fieldOfView / 2);
-            }
-        }
         public Vector3 Left
         {
             get { return Vector3.Normalize(-Vector3.Cross(viewDirection, up)); }
@@ -36,7 +30,9 @@ namespace Template
         {
             get { return -Up; }
         }
+        //half of total FOV
         public double fieldOfView;
+        float appliedFieldOfView;
         float displayWidth;
         float displayHeight;
 
@@ -45,7 +41,8 @@ namespace Template
             position = pos;
             direction = dir;
             viewDirection = Vector3.Normalize(direction - position);
-            fieldOfView = Math.PI*0.5;
+            fieldOfView = Math.PI*0.25;
+            appliedFieldOfView = (float)(1 / Math.Tan(fieldOfView));
             displayWidth = screenWidth;
             displayHeight = screenHeight;
             left = new Vector3(-1, 0, 0);
@@ -68,7 +65,7 @@ namespace Template
         }
         public Vector3 Center
         {
-            get { return (position + (float)AppliedFieldOfView * viewDirection); }
+            get { return (position + appliedFieldOfView * viewDirection); }
         }
         public Ray CreatePrimaryRay(int x, int y)
         {
