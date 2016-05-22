@@ -31,7 +31,7 @@ namespace Template
         }
         public void HandleInput(double timeElapsedMilliseconds)
         {
-            double timeElapsed = 150/timeElapsedMilliseconds;
+            double timeElapsed = timeElapsedMilliseconds/1000;
             var state = Keyboard.GetState();
             if (state.IsKeyDown(Key.Right))
             {
