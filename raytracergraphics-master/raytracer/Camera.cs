@@ -41,6 +41,7 @@ namespace Template
             position = pos;
             direction = dir;
             viewDirection = Vector3.Normalize(direction - position);
+            //half of total FOV
             fieldOfView = Math.PI*0.25;
             appliedFieldOfView = (float)(1 / Math.Tan(fieldOfView));
             displayWidth = screenWidth;

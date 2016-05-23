@@ -13,11 +13,19 @@ namespace Template
         public float distanceToOrigin;
         public float width = 10;
         public float length = 10;
+        public int textureWidth;
+        public int textureHeight;
+        public Vector3 color1,color2;
 
         public Plane(Vector3 n, float dToOrigin,Vector3 color):base(color)
         {
             this.normal = n.Normalized();
             this.distanceToOrigin = dToOrigin;
+            textureWidth = 5;
+            textureHeight = 10;
+            color1= new Vector3(255, 255, 255);
+            color2 = new Vector3(50, 50, 50);
+
         }
 
         public override void Intersect(Ray ray)
@@ -33,12 +41,12 @@ namespace Template
 
                 Vector3 point = ray.Origin + (ray.distance * ray.Direction);
 
-                if (point.X > -5 && point.X < 5 && point.Z < 10 && point.Z > 0)
+                if (point.X > -textureWidth && point.X < textureWidth && point.Z < textureHeight && point.Z > 0)
                 {
-                    if ((point.X + 5) % 2 >= 1 != (point.Z + 5) % 2 > 1)
-                        color = new Vector3(255, 255, 255);
+                    if ((point.X + textureWidth) % 2 >= 1 != (point.Z + textureWidth) % 2 > 1)
+                        color = color1;
                     else
-                        color = new Vector3(50, 50, 50);
+                        color = color2;
                 }
                 else
                     color = Vector3.Zero;
