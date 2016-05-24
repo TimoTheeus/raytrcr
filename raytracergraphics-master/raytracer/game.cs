@@ -82,7 +82,6 @@ class Game
                     Math.Pow((((ScreenCoordinates(new Vector2(0, 2.5f)) + ScreenCoordinates(new Vector2(cam.position.X + 5, cam.position.Z)) - Vector2.Multiply(Vector2.Divide(vector, 20), (i)))).Y), 2))
                     < 1500)
                 {
-                    Console.WriteLine("yay");
                     return 100;
                 }
             }
