@@ -16,6 +16,8 @@ namespace Template
         public Surface display;
         List<Intersection> intersectionList;
         int halfDisplayWidth;
+        float maxRayDistance;
+        float epsilon;
         public Raytracer(Scene rs, Camera rc, Surface surface)
         {
             scene = rs;
@@ -23,6 +25,8 @@ namespace Template
             display = surface;
             intersectionList = new List<Intersection>();
             halfDisplayWidth = display.width / 2;
+            maxRayDistance = 100f;
+            epsilon = 0.0001f;
         }
         public void Render()
         {
@@ -31,10 +35,24 @@ namespace Template
                 for (int y = 0; y < display.height; y++)
                 {
                     Ray ray = camera.CreatePrimaryRay(x, y);
-                    float distance = ray.distance;
                     k=scene.ReturnClosestIntersection(ray);
-                    if(ray.distance<distance)
-                    display.pixels[x + y * display.width] = CreateColor((int)k.nearestPrimitive.color.X, (int)k.nearestPrimitive.color.Y, (int)k.nearestPrimitive.color.Z);
+                    //if the ray distance actually decreased
+                    if (ray.distance < maxRayDistance)
+                    {
+                        Vector3 intensity = Vector3.Zero;
+                        //make shadowrays for all lightsources and intersect them
+                        for (int i = 0; i < scene.lightsources.Count; i++)
+                        {
+                            Vector3 direction = scene.lightsources[i].location - k.point;
+                            Ray shadowray = new Ray(k.point+epsilon*direction, Vector3.Normalize(direction), direction.Length-2*(epsilon*direction).Length);
+
+                            if (!scene.IntersectShadowRay(shadowray))
+                            {
+                                intensity += scene.lightsources[i].intensity*(float)(1/(Math.PI*4*k.distance));
+                            }
+                        }
+                        display.pixels[x + y * display.width] = CreateColor((int)(k.nearestPrimitive.color.X*intensity.X), (int)(k.nearestPrimitive.color.Y*intensity.Y), (int)(k.nearestPrimitive.color.Z*intensity.Z));
+                    }
                 }
         }
         int CreateColor(int red, int green, int blue)

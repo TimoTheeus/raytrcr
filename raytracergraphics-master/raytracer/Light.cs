@@ -9,8 +9,8 @@ namespace Template
     class Light
     {
         //member variables
-        protected Vector3 location;
-        protected Vector3 intensity;
+        public Vector3 location;
+        public Vector3 intensity;
 
         //constructor
         public Light(Vector3 loc, Vector3 i)

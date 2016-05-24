@@ -35,5 +35,25 @@ namespace Template
         {
             primitives.Add(p);
         }
+        public void AddLightSource(Light l)
+        {
+            lightsources.Add(l);
+        }
+        public bool IntersectShadowRay(Ray r)
+        {
+            //store the maxdistance (magnitude of vector (light.pos-I.pos)
+            float maxDistance = r.distance;
+            for(int i = 0; i < primitives.Count; i++)
+            {
+                primitives[i].Intersect(r);
+            }
+            //if the new distance is between the max distance and 0, return true
+            if (r.distance < maxDistance && r.distance > 0)
+            {
+                return true;
+            }
+            //else false
+            else { return false;}
+        }
     }
 }
