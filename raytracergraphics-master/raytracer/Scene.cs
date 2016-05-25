@@ -19,13 +19,13 @@ namespace Template
 
         public Intersection ReturnClosestIntersection(Ray ray)
         {
-            for (int i = 0; i < primitives.Count; i++)
+            foreach (Primitive p in primitives)
             {
-                primitives[i].Intersect(ray);
+                p.Intersect(ray);
             }
             Vector3 point = ray.Origin + (ray.distance * ray.Direction);
-            if (ray.distance < 100f) 
-            return new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal);
+            if (ray.distance < 100f)
+                return new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal);
             else
             {
                 return new Intersection(point, ray.distance, ray.nearestPrimitive, Vector3.Zero);
@@ -43,9 +43,9 @@ namespace Template
         {
             //store the maxdistance (magnitude of vector (light.pos-I.pos)
             float maxDistance = r.distance;
-            for(int i = 0; i < primitives.Count; i++)
+            foreach (Primitive p in primitives)
             {
-                primitives[i].Intersect(r);
+                p.Intersect(r);
             }
             //if the new distance is between the max distance and 0, return true
             if (r.distance < maxDistance && r.distance > 0)
@@ -53,7 +53,7 @@ namespace Template
                 return true;
             }
             //else false
-            else { return false;}
+            else { return false; }
         }
     }
 }

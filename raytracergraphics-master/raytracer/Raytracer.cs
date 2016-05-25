@@ -35,23 +35,25 @@ namespace Template
                 for (int y = 0; y < display.height; y++)
                 {
                     Ray ray = camera.CreatePrimaryRay(x, y);
-                    k=scene.ReturnClosestIntersection(ray);
+                    k = scene.ReturnClosestIntersection(ray);
                     //if the ray distance actually decreased
                     if (ray.distance < maxRayDistance)
                     {
                         Vector3 intensity = Vector3.Zero;
                         //make shadowrays for all lightsources and intersect them
-                        for (int i = 0; i < scene.lightsources.Count; i++)
+
+                        foreach (Light l in scene.lightsources)
                         {
-                            Vector3 direction = scene.lightsources[i].location - k.point;
-                            Ray shadowray = new Ray(k.point+epsilon*direction, Vector3.Normalize(direction), direction.Length-2*(epsilon*direction).Length);
+                            Vector3 direction = l.location - k.point;
+                            Ray shadowray = new Ray(k.point + epsilon * direction, Vector3.Normalize(direction), direction.Length - 2 * (epsilon * direction).Length);
 
                             if (!scene.IntersectShadowRay(shadowray))
                             {
-                                intensity += scene.lightsources[i].intensity*(float)(1/(Math.PI*4*k.distance));
+                                intensity += l.intensity * (float)(1 / (Math.PI * 4 * k.distance));
                             }
                         }
-                        display.pixels[x + y * display.width] = CreateColor((int)(k.nearestPrimitive.color.X*intensity.X), (int)(k.nearestPrimitive.color.Y*intensity.Y), (int)(k.nearestPrimitive.color.Z*intensity.Z));
+
+                        display.pixels[x + y * display.width] = CreateColor((int)(k.nearestPrimitive.color.X * intensity.X), (int)(k.nearestPrimitive.color.Y * intensity.Y), (int)(k.nearestPrimitive.color.Z * intensity.Z));
                     }
                 }
         }
