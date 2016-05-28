@@ -27,13 +27,13 @@ class Game
             app = new Application(r);
             AddPrimitives();
 	    }
-	    // tick: renders one frame
-	    public void Tick()
-	    {
-		    screen.Clear( 0 );
-		    screen.Print( "hello world", 2, 2, 0xffffff );
+        // tick: renders one frame
+        public void Tick()
+        {
+            screen.Clear(0);
+            screen.Print("hello world", 2, 2, 0xffffff);
             app.Visualize();
-            screen.Box(ScreenCoordinatesX(cam.position.X + 5) - 1, ScreenCoordinatesZ(cam.position.Z), ScreenCoordinatesX(cam.position.X + 5) + 1, ScreenCoordinatesZ(cam.position.Z) + 2, 256*256*255 + 256 * 255);
+            screen.Box(ScreenCoordinatesX(cam.position.X + 5) - 1, ScreenCoordinatesZ(cam.position.Z), ScreenCoordinatesX(cam.position.X + 5) + 1, ScreenCoordinatesZ(cam.position.Z) + 2, 256 * 256 * 255 + 256 * 255);
 
             foreach (Primitive primitive in primitiveList)
             {
@@ -42,20 +42,16 @@ class Game
                     Sphere sphere = primitive as Sphere;
                     for (int i = 0; i < 100; i++)
                     {
-                        screen.Line(ScreenCoordinatesX(Math.Cos(i / (2 * Math.PI)) + sphere.position.X + 5), ScreenCoordinatesZ(Math.Sin(i / (2 * Math.PI)) + sphere.position.Z), ScreenCoordinatesX(Math.Cos((i + 1)/ (2 * Math.PI)) + sphere.position.X + 5), ScreenCoordinatesZ(Math.Sin((i + 1)/(2 * Math.PI)) + sphere.position.Z), 255);
+                        screen.Line(ScreenCoordinatesX(Math.Cos(i / (2 * Math.PI)) + sphere.position.X + 5), ScreenCoordinatesZ(Math.Sin(i / (2 * Math.PI)) + sphere.position.Z), ScreenCoordinatesX(Math.Cos((i + 1) / (2 * Math.PI)) + sphere.position.X + 5), ScreenCoordinatesZ(Math.Sin((i + 1) / (2 * Math.PI)) + sphere.position.Z), ConvertToColor(sphere.color));
                     }
                 }
             }
-
-            Vector2 camcoordinates = new Vector2(ScreenCoordinatesX(cam.position.X + 5), ScreenCoordinatesZ(cam.position.Z));
-
-            float length = 5f;
-
-            for (int i = 0; i <= 10; i++)
-            {
-                screen.Line((int)camcoordinates.X, (int)camcoordinates.Y, ScreenCoordinatesX(cam.position.X + 5 + length * Math.Sin(-cam.fieldOfView + i * cam.fieldOfView/5)), ScreenCoordinatesX((cam.position.Z - length * Math.Cos(-cam.fieldOfView + i * cam.fieldOfView / 5))), Correct(new Vector2(ScreenCoordinatesX(cam.position.X + 5 + length * Math.Sin(-cam.fieldOfView + i * cam.fieldOfView / 5)), ScreenCoordinatesX((cam.position.Z - length * Math.Cos(-cam.fieldOfView + i * cam.fieldOfView / 5))))));
-            }
-
+            Console.WriteLine(cam.viewDirection);
+            screen.Line(ScreenCoordinatesX(cam.position.X + 5 + cam.viewDirection.X - cam.viewDirection.Z),
+                ScreenCoordinatesZ(cam.position.Z + cam.viewDirection.Z + cam.viewDirection.X / Math.Sqrt(Math.Pow(cam.viewDirection.X, 2) + Math.Pow(cam.viewDirection.Z, 2))),
+                ScreenCoordinatesX(cam.position.X + 5 + cam.viewDirection.X + cam.viewDirection.Z),
+                ScreenCoordinatesZ(cam.position.Z + cam.viewDirection.Z - cam.viewDirection.X / Math.Sqrt(Math.Pow(cam.viewDirection.X, 2) + Math.Pow(cam.viewDirection.Z, 2))),
+                255*256*256 + 255*256 + 255);
         }
 
         public int ScreenCoordinatesX(double number)
@@ -68,25 +64,13 @@ class Game
             return (int)((10 - number) * 50);
         }
         
-        public Vector2 ScreenCoordinates(Vector2 vector)
+        public int ConvertToColor(Vector3 vector)
         {
-            return new Vector2((int)(vector.X * 50 + 512), (int)((10 - vector.Y) * 50));
-        }
-
-        public int Correct(Vector2 vector)
-        {
-            for (int i = 0; i < 20; i++)
-            {
-                if (Math.Sqrt(
-                    Math.Pow((((ScreenCoordinates(new Vector2(0, 2.5f)) + ScreenCoordinates(new Vector2(cam.position.X + 5, cam.position.Z)) - Vector2.Multiply(Vector2.Divide(vector, 20), (i)))).X), 2) +
-                    Math.Pow((((ScreenCoordinates(new Vector2(0, 2.5f)) + ScreenCoordinates(new Vector2(cam.position.X + 5, cam.position.Z)) - Vector2.Multiply(Vector2.Divide(vector, 20), (i)))).Y), 2))
-                    < 1500)
-                {
-                    return 100;
-                }
-            }
-            return 255;
-
+            float number = 0;
+            number += vector.X * 256 * 256;
+            number += vector.Y * 256;
+            number += vector.Z;
+            return (int)number;
         }
 
         void AddPrimitives()

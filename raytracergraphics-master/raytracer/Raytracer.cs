@@ -36,6 +36,15 @@ namespace Template
                 {
                     Ray ray = camera.CreatePrimaryRay(x, y);
                     k=scene.ReturnClosestIntersection(ray);
+                    if (x % 10 == 0 && y == display.height / 2)
+                    {
+                        if (k.normal == Vector3.Zero)
+                        {
+                            display.Line(ScreenCoordinatesX(camera.position.X + 5), ScreenCoordinatesZ(camera.position.Z), ScreenCoordinatesX((k.point.X)/20 + 5), ScreenCoordinatesZ(k.point.Z/20), 100 * 256 * 256 + 100 * 256);
+                        }
+                        else
+                            display.Line(ScreenCoordinatesX(camera.position.X + 5), ScreenCoordinatesZ(camera.position.Z), ScreenCoordinatesX(k.point.X + 5), ScreenCoordinatesZ(k.point.Z), 255 * 256 * 256 + 255 * 256);
+                    }
                     //if the ray distance actually decreased
                     if (ray.distance < maxRayDistance)
                     {
@@ -53,11 +62,23 @@ namespace Template
                         }
                         display.pixels[x + y * display.width] = CreateColor((int)(k.nearestPrimitive.color.X*intensity.X), (int)(k.nearestPrimitive.color.Y*intensity.Y), (int)(k.nearestPrimitive.color.Z*intensity.Z));
                     }
+
+
                 }
         }
         int CreateColor(int red, int green, int blue)
         {
             return (red << 16) + (green << 8) + blue;
+        }
+
+        public int ScreenCoordinatesX(double number)
+        {
+            return (int)(number * 50 + 512);
+        }
+
+        public int ScreenCoordinatesZ(double number)
+        {
+            return (int)((10 - number) * 50);
         }
     }
 }
