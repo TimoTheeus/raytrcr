@@ -77,6 +77,7 @@ namespace Template
             Ray r = new Ray(this.position, direction,100f);
             return r;
         }
+        
         public void RotateRight(double timeElapsed)
         {
             Vector3 target = position + viewDirection;

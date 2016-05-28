@@ -44,12 +44,17 @@ namespace Template
                         foreach (Light l in scene.lightsources)
                         {
                             Vector3 direction = l.location - k.point;
-                            Ray shadowray = new Ray(k.point + epsilon * direction, Vector3.Normalize(direction), direction.Length - 2 * (epsilon * direction).Length);
-
-                            if (!scene.IntersectShadowRay(shadowray))
+                            float nDotL = Vector3.Dot(direction.Normalized(), k.normal);
+                            //if nDotL <0 dont make and intersect a shadowray
+                            if (nDotL > 0)
                             {
-                                //distance attenuation and N dot L
-                                intensity += l.intensity * (float)(1 / (Math.PI * 4 * Math.Pow(direction.Length, 2)))* Vector3.Dot(direction.Normalized(), k.normal);
+                                Ray shadowray = new Ray(k.point + epsilon * direction, Vector3.Normalize(direction), direction.Length - 2 * (epsilon * direction).Length);
+
+                                if (!scene.IntersectShadowRay(shadowray))
+                                {
+                                    //distance attenuation and N dot L clamped to 0
+                                    intensity += l.intensity * (float)(1 / (Math.PI * 4 * Math.Pow(direction.Length, 2))) * Math.Max(0, nDotL);
+                                }
                             }
                         }
                         Vector3 color = floatColorToInt(k.nearestPrimitive.color * intensity);
