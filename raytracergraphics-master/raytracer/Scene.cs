@@ -11,26 +11,58 @@ namespace Template
     {
         public List<Primitive> primitives;
         public List<Light> lightsources;
+        float epsilon;
+        int recursionCounter;
+        int recursionLimit;
         public Scene(List<Primitive> pList, List<Light> lList)
         {
             primitives = pList;
             lightsources = lList;
+            epsilon = 0.0001f;
+            recursionCounter = 0;
+            recursionLimit = 1;
         }
 
         public Intersection ReturnClosestIntersection(Ray ray)
         {
-            for (int i = 0; i < primitives.Count; i++)
+            foreach (Primitive p in primitives)
             {
-                primitives[i].Intersect(ray);
+                p.Intersect(ray);
             }
             Vector3 point = ray.Origin + (ray.distance * ray.Direction);
-            if (ray.distance < 100f) 
-            return new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal);
+
+            if (ray.distance < 100f)
+            {
+                if (ray.nearestPrimitive.isSpecular)
+                {
+                    if (recursionCounter < recursionLimit)
+                    {
+                        recursionCounter += 1;
+                        Vector3 mirrorColor = ray.nearestPrimitive.color;
+                        Vector3 direction = ray.Direction.Normalized();
+                        Vector3 reflectedDirection = direction - 2 * (Vector3.Dot(direction, ray.nearestPrimitive.normal)) * ray.nearestPrimitive.normal;
+                        Intersection newIntersection = ReturnClosestIntersection(new Ray(point + epsilon * reflectedDirection, reflectedDirection, 100f));
+                        newIntersection.color *= mirrorColor;
+                        return newIntersection;
+                    }
+                    else
+                    {
+                        recursionCounter = 0;
+                        return new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal, Vector3.Zero);
+                    }
+                }
+                else
+                {
+                    recursionCounter = 0;
+                    return new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal, ray.nearestPrimitive.color);
+                }
+            }
             else
             {
-                return new Intersection(point, ray.distance, ray.nearestPrimitive, Vector3.Zero);
+                return new Intersection(point, ray.distance, ray.nearestPrimitive, Vector3.Zero, Vector3.Zero);
             }
         }
+        
         public void AddPrimitive(Primitive p)
         {
             primitives.Add(p);
@@ -43,9 +75,9 @@ namespace Template
         {
             //store the maxdistance (magnitude of vector (light.pos-I.pos)
             float maxDistance = r.distance;
-            for(int i = 0; i < primitives.Count; i++)
+            foreach (Primitive p in primitives)
             {
-                primitives[i].Intersect(r);
+                p.Intersect(r);
             }
             //if the new distance is between the max distance and 0, return true
             if (r.distance < maxDistance && r.distance > 0)
@@ -53,7 +85,7 @@ namespace Template
                 return true;
             }
             //else false
-            else { return false;}
+            else { return false; }
         }
     }
 }

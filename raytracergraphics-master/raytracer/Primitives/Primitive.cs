@@ -9,8 +9,14 @@ namespace Template
 {
     class Primitive
     {
+        //absorption
         public Vector3 color;
+        //the normal
         public Vector3 normal;
+        //specular or not
+        public bool isSpecular;
+        //0-1f
+        public float specularity;
      
         public Primitive(Vector3 c)
         {

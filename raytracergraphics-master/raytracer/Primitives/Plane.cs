@@ -17,14 +17,14 @@ namespace Template
         public int textureHeight;
         public Vector3 color1,color2;
 
-        public Plane(Vector3 n, float dToOrigin,Vector3 color):base(color)
+        public Plane(Vector3 n, float dToOrigin,Vector3 color1, Vector3 color2) :base(color1)
         {
             this.normal = n.Normalized();
             this.distanceToOrigin = dToOrigin;
             textureWidth = 5;
             textureHeight = 10;
-            color1= new Vector3(255, 255, 255);
-            color2 = new Vector3(50, 50, 50);
+            this.color1= color1;
+            this.color2 = color2;
 
         }
 
