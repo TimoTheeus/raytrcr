@@ -91,11 +91,11 @@ class Game
 
         void AddPrimitives()
         {
-            s.AddPrimitive(new Sphere(new Vector3(0, 0, 3f), 1f, new Vector3(255, 0, 0)));
-            s.AddPrimitive(new Sphere(new Vector3(-2.5f, 0, 3f), 1f, new Vector3(0, 255, 0)));
-            s.AddPrimitive(new Sphere(new Vector3(2.5f, 0, 3f), 1f, new Vector3(0, 0, 255)));
-            s.AddPrimitive(new Plane(new Vector3(0, 1, 0), 1f, new Vector3(0, 255, 255)));
-            s.AddLightSource(new Light(new Vector3(0, -1, 0), new Vector3(50f, 50f, 50f)));
+            s.AddPrimitive(new Sphere(new Vector3(0, 0, 3f), 1f, new Vector3(1f, 0, 0)));
+            s.AddPrimitive(new Sphere(new Vector3(-2.5f, 0, 3f), 1f, new Vector3(0, 1f, 0)));
+            s.AddPrimitive(new Sphere(new Vector3(2.5f, 0, 3f), 1f, new Vector3(0, 0, 1f)));
+            s.AddPrimitive(new Plane(new Vector3(0, 1, 0), 1f, new Vector3(1f, 1f, 1f), new Vector3(0.2f, 0.2f, 0.2f)));
+            s.AddLightSource(new Light(new Vector3(0, -1, 0), new Vector3(14f, 14f, 14f)));
         }
     }
 

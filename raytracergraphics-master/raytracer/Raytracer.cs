@@ -41,7 +41,6 @@ namespace Template
                     {
                         Vector3 intensity = Vector3.Zero;
                         //make shadowrays for all lightsources and intersect them
-
                         foreach (Light l in scene.lightsources)
                         {
                             Vector3 direction = l.location - k.point;
@@ -49,13 +48,18 @@ namespace Template
 
                             if (!scene.IntersectShadowRay(shadowray))
                             {
-                                intensity += l.intensity * (float)(1 / (Math.PI * 4 * k.distance));
+                                intensity += l.intensity * (float)(1 / (Math.PI  * Math.Pow(direction.Length,2)));
                             }
                         }
-
-                        display.pixels[x + y * display.width] = CreateColor((int)(k.nearestPrimitive.color.X * intensity.X), (int)(k.nearestPrimitive.color.Y * intensity.Y), (int)(k.nearestPrimitive.color.Z * intensity.Z));
+                        Vector3 color = floatColorToInt(k.nearestPrimitive.color * intensity);
+                        display.pixels[x + y * display.width] = CreateColor((int)color.X, (int)color.Y, (int)color.Z);
                     }
                 }
+        }
+        Vector3 floatColorToInt(Vector3 floatColorValues)
+        {
+            floatColorValues *= 255;                //Scale the float color up by 255
+            return new Vector3( (int)floatColorValues.X, (int)floatColorValues.Y, (int)floatColorValues.Z);
         }
         int CreateColor(int red, int green, int blue)
         {
