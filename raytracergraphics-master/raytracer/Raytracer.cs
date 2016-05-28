@@ -48,7 +48,8 @@ namespace Template
 
                             if (!scene.IntersectShadowRay(shadowray))
                             {
-                                intensity += l.intensity * (float)(1 / (Math.PI  * Math.Pow(direction.Length,2)));
+                                //distance attenuation and N dot L
+                                intensity += l.intensity * (float)(1 / (Math.PI * 4 * Math.Pow(direction.Length, 2)))* Vector3.Dot(direction.Normalized(), k.normal);
                             }
                         }
                         Vector3 color = floatColorToInt(k.nearestPrimitive.color * intensity);
@@ -58,8 +59,7 @@ namespace Template
         }
         Vector3 floatColorToInt(Vector3 floatColorValues)
         {
-            floatColorValues *= 255;                //Scale the float color up by 255
-            return new Vector3( (int)floatColorValues.X, (int)floatColorValues.Y, (int)floatColorValues.Z);
+            return new Vector3(Math.Min(255,floatColorValues.X*256.0f), Math.Min(255, floatColorValues.Y * 256.0f), Math.Min(255, floatColorValues.Z * 256.0f));
         }
         int CreateColor(int red, int green, int blue)
         {
