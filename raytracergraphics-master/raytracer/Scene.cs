@@ -12,11 +12,15 @@ namespace Template
         public List<Primitive> primitives;
         public List<Light> lightsources;
         float epsilon;
+        int recursionCounter;
+        int recursionLimit;
         public Scene(List<Primitive> pList, List<Light> lList)
         {
             primitives = pList;
             lightsources = lList;
             epsilon = 0.0001f;
+            recursionCounter = 0;
+            recursionLimit = 1;
         }
 
         public Intersection ReturnClosestIntersection(Ray ray)
@@ -31,15 +35,25 @@ namespace Template
             {
                 if (ray.nearestPrimitive.isSpecular)
                 {
-                    Vector3 mirrorColor = ray.nearestPrimitive.color;
-                    Vector3 direction = ray.Direction.Normalized();
-                    Vector3 reflectedDirection = direction - 2 * (Vector3.Dot(direction, ray.nearestPrimitive.normal)) * ray.nearestPrimitive.normal;
-                    Intersection newIntersection = ReturnClosestIntersection(new Ray(point+epsilon*reflectedDirection, reflectedDirection, 100f));
-                    newIntersection.color *= mirrorColor;
-                    return newIntersection;
+                    if (recursionCounter < recursionLimit)
+                    {
+                        recursionCounter += 1;
+                        Vector3 mirrorColor = ray.nearestPrimitive.color;
+                        Vector3 direction = ray.Direction.Normalized();
+                        Vector3 reflectedDirection = direction - 2 * (Vector3.Dot(direction, ray.nearestPrimitive.normal)) * ray.nearestPrimitive.normal;
+                        Intersection newIntersection = ReturnClosestIntersection(new Ray(point + epsilon * reflectedDirection, reflectedDirection, 100f));
+                        newIntersection.color *= mirrorColor;
+                        return newIntersection;
+                    }
+                    else
+                    {
+                        recursionCounter = 0;
+                        return new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal, Vector3.Zero);
+                    }
                 }
                 else
                 {
+                    recursionCounter = 0;
                     return new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal, ray.nearestPrimitive.color);
                 }
             }
