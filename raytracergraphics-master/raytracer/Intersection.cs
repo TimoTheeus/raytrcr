@@ -18,13 +18,15 @@ namespace Template
         public Primitive nearestPrimitive;
         // The distance at which the intersection occurred.
         public float distance;
+        public Vector3 color;
 
-        public Intersection(Vector3 p, float d, Primitive nearestP, Vector3 n)
+        public Intersection(Vector3 p, float d, Primitive nearestP, Vector3 n,Vector3 color)
         {
             point = p;
             nearestPrimitive = nearestP;
             normal = n;
             distance = d;
+            this.color = color;
         }
     }
 }

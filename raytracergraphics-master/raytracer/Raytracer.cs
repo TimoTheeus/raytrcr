@@ -57,8 +57,11 @@ namespace Template
                                 }
                             }
                         }
-                        Vector3 color = floatColorToInt(k.nearestPrimitive.color * intensity);
-                        display.pixels[x + y * display.width] = CreateColor((int)color.X, (int)color.Y, (int)color.Z);
+                        if (k.nearestPrimitive != null)
+                        {
+                            Vector3 color = floatColorToInt(k.nearestPrimitive.color * intensity);
+                            display.pixels[x + y * display.width] = CreateColor((int)color.X, (int)color.Y, (int)color.Z);
+                        }
                     }
                 }
         }

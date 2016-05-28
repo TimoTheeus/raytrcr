@@ -14,7 +14,7 @@ namespace Template
         //the normal
         public Vector3 normal;
         //specular or not
-        public bool specular;
+        public bool isSpecular;
         //0-1f
         public float specularity;
      

@@ -11,10 +11,12 @@ namespace Template
     {
         public List<Primitive> primitives;
         public List<Light> lightsources;
+        float epsilon;
         public Scene(List<Primitive> pList, List<Light> lList)
         {
             primitives = pList;
             lightsources = lList;
+            epsilon = 0.0001f;
         }
 
         public Intersection ReturnClosestIntersection(Ray ray)
@@ -24,13 +26,29 @@ namespace Template
                 p.Intersect(ray);
             }
             Vector3 point = ray.Origin + (ray.distance * ray.Direction);
+
             if (ray.distance < 100f)
-                return new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal);
+            {
+                if (ray.nearestPrimitive.isSpecular)
+                {
+                    Vector3 mirrorColor = ray.nearestPrimitive.color;
+                    Vector3 direction = ray.Direction.Normalized();
+                    Vector3 reflectedDirection = direction - 2 * (Vector3.Dot(direction, ray.nearestPrimitive.normal)) * ray.nearestPrimitive.normal;
+                    Intersection newIntersection = ReturnClosestIntersection(new Ray(point+epsilon*reflectedDirection, reflectedDirection, 100f));
+                    newIntersection.color *= mirrorColor;
+                    return newIntersection;
+                }
+                else
+                {
+                    return new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal, ray.nearestPrimitive.color);
+                }
+            }
             else
             {
-                return new Intersection(point, ray.distance, ray.nearestPrimitive, Vector3.Zero);
+                return new Intersection(point, ray.distance, ray.nearestPrimitive, Vector3.Zero, Vector3.Zero);
             }
         }
+        
         public void AddPrimitive(Primitive p)
         {
             primitives.Add(p);

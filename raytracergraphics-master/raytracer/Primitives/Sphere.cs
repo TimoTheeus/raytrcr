@@ -38,7 +38,11 @@ namespace Template
             {
                 ray.distance = t;
                 ray.nearestPrimitive = this;
-                this.normal = -c.Normalized();
+                this.normal = new Vector3((ray.Origin+ray.distance*ray.Direction)-this.position).Normalized();
+                if (Vector3.Dot(normal, ray.Direction.Normalized()) > 0)
+                {
+                    this.normal = -this.normal;
+                }
             }
             //normal at the point is -c.Normalized
         }
