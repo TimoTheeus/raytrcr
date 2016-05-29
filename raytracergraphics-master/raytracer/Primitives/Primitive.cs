@@ -21,6 +21,7 @@ namespace Template
         public Primitive(Vector3 c)
         {
             color = c;
+            specularity = 0.7f;
         }
         public virtual void Intersect(Ray ray)
         {

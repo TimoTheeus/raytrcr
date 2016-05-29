@@ -19,6 +19,7 @@ namespace Template
         // The distance at which the intersection occurred.
         public float distance;
         public Vector3 color;
+        public float addedDistance;
 
         public Intersection(Vector3 p, float d, Primitive nearestP, Vector3 n,Vector3 color)
         {

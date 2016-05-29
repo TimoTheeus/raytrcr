@@ -33,8 +33,10 @@ namespace Template
 
             if (ray.distance < 100f)
             {
+               
                 if (ray.nearestPrimitive.isSpecular)
                 {
+                Intersection i = new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal, ray.nearestPrimitive.color);
                     if (recursionCounter < recursionLimit)
                     {
                         recursionCounter += 1;
@@ -43,6 +45,8 @@ namespace Template
                         Vector3 reflectedDirection = direction - 2 * (Vector3.Dot(direction, ray.nearestPrimitive.normal)) * ray.nearestPrimitive.normal;
                         Intersection newIntersection = ReturnClosestIntersection(new Ray(point + epsilon * reflectedDirection, reflectedDirection, 100f));
                         newIntersection.color *= mirrorColor;
+                        newIntersection.addedDistance = new Vector3(newIntersection.point - i.point).Length;
+                        newIntersection.nearestPrimitive = i.nearestPrimitive;
                         return newIntersection;
                     }
                     else

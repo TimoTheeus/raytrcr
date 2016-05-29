@@ -46,7 +46,6 @@ class Game
                     }
                 }
             }
-            Console.WriteLine(cam.viewDirection);
             screen.Line(ScreenCoordinatesX(cam.position.X + 5 + cam.viewDirection.X - cam.viewDirection.Z),
                 ScreenCoordinatesZ(cam.position.Z + cam.viewDirection.Z + cam.viewDirection.X / Math.Sqrt(Math.Pow(cam.viewDirection.X, 2) + Math.Pow(cam.viewDirection.Z, 2))),
                 ScreenCoordinatesX(cam.position.X + 5 + cam.viewDirection.X + cam.viewDirection.Z),
