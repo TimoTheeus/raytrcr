@@ -13,14 +13,14 @@ namespace Template
         public List<Light> lightsources;
         float epsilon;
         int recursionCounter;
-        int recursionLimit;
+        int recursionDepth;
         public Scene(List<Primitive> pList, List<Light> lList)
         {
             primitives = pList;
             lightsources = lList;
             epsilon = 0.0001f;
             recursionCounter = 0;
-            recursionLimit = 1;
+            recursionDepth = 2;
         }
 
         public Intersection ReturnClosestIntersection(Ray ray)
@@ -33,11 +33,10 @@ namespace Template
 
             if (ray.distance < 100f)
             {
-               
                 if (ray.nearestPrimitive.isSpecular)
                 {
-                Intersection i = new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal, ray.nearestPrimitive.color);
-                    if (recursionCounter < recursionLimit)
+                    Intersection i = new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal, ray.nearestPrimitive.color);
+                    if (recursionCounter < recursionDepth)
                     {
                         recursionCounter += 1;
                         Vector3 mirrorColor = ray.nearestPrimitive.color;
@@ -45,7 +44,7 @@ namespace Template
                         Vector3 reflectedDirection = direction - 2 * (Vector3.Dot(direction, ray.nearestPrimitive.normal)) * ray.nearestPrimitive.normal;
                         Intersection newIntersection = ReturnClosestIntersection(new Ray(point + epsilon * reflectedDirection, reflectedDirection, 100f));
                         newIntersection.color *= mirrorColor;
-                        newIntersection.addedDistance = new Vector3(newIntersection.point - i.point).Length;
+                        newIntersection.addedDistance += new Vector3(newIntersection.point - i.point).Length;
                         newIntersection.nearestPrimitive = i.nearestPrimitive;
                         return newIntersection;
                     }

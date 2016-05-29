@@ -74,12 +74,19 @@ class Game
 
         void AddPrimitives()
         {
-            s.AddPrimitive(new Sphere(new Vector3(0, 0, 3f), 1f, new Vector3(1f, 0, 0)));
-            s.AddPrimitive(new Sphere(new Vector3(-2.5f, 0, 3f), 1f, new Vector3(0, 1f, 0)));
             //Specular bol met een kleur
             Sphere specularSphere = new Sphere(new Vector3(2.5f, 0, 3f), 1f, new Vector3(1f, 1f, 1f));
             specularSphere.isSpecular = true;
             s.AddPrimitive(specularSphere);
+            //Specular bol met een kleur
+            Sphere specularSphere2 = new Sphere(new Vector3(-2.5f, 0, 3f), 1f, new Vector3(0, 1f, 0));
+            specularSphere2.isSpecular = true;
+            s.AddPrimitive(specularSphere2);
+            //Specular bol met een kleur
+            Sphere specularSphere3 = new Sphere(new Vector3(0, 0, 3f), 1f, new Vector3(1f, 0, 0));
+            specularSphere3.isSpecular = true;
+            s.AddPrimitive(specularSphere3);
+
             s.AddPrimitive(new Plane(new Vector3(0, -1, 0), -1f, new Vector3(1f, 1f, 1f), new Vector3(0.2f, 0.2f, 0.2f)));
             //Lightsources
             s.AddLightSource(new Light(new Vector3(0, -1, 0), new Vector3(50f, 50f, 50f)));
