@@ -14,6 +14,7 @@ namespace Template
         float epsilon;
         int recursionCounter;
         int recursionDepth;
+        float maxRayDistance;
         public Scene(List<Primitive> pList, List<Light> lList)
         {
             primitives = pList;
@@ -21,51 +22,65 @@ namespace Template
             epsilon = 0.0001f;
             recursionCounter = 0;
             recursionDepth = 2;
+            maxRayDistance = 100f;
         }
 
-        public Intersection ReturnClosestIntersection(Ray ray)
+        public Ray ReturnClosestIntersection(Ray ray)
         {
             foreach (Primitive p in primitives)
             {
                 p.Intersect(ray);
             }
-            Vector3 point = ray.Origin + (ray.distance * ray.Direction);
-
-            if (ray.distance < 100f)
+            if (ray.nearestPrimitive != null)
             {
-                if (ray.nearestPrimitive.isSpecular)
+                Vector3 point = ray.Origin + (ray.distance * ray.Direction);
+                ray.point = point;
+                ray.normalAtPoint = ray.nearestPrimitive.normal;
+            }
+            return ray;
+
+        }
+        public Vector3 Trace(Ray ray)
+        {
+            ray = ReturnClosestIntersection(ray);
+            Primitive p = ray.nearestPrimitive;
+            if (ray.distance < maxRayDistance)
+            {
+                if (p.isSpecular)
                 {
-                    Intersection i = new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal, ray.nearestPrimitive.color);
                     if (recursionCounter < recursionDepth)
                     {
-                        recursionCounter += 1;
-                        Vector3 mirrorColor = ray.nearestPrimitive.color;
-                        Vector3 direction = ray.Direction.Normalized();
-                        Vector3 reflectedDirection = direction - 2 * (Vector3.Dot(direction, ray.nearestPrimitive.normal)) * ray.nearestPrimitive.normal;
-                        Intersection newIntersection = ReturnClosestIntersection(new Ray(point + epsilon * reflectedDirection, reflectedDirection, 100f));
-                        newIntersection.color *= mirrorColor;
-                        newIntersection.addedDistance += new Vector3(newIntersection.point - i.point).Length;
-                        newIntersection.nearestPrimitive = i.nearestPrimitive;
-                        return newIntersection;
+                        Vector3 reflectedDirection = new Vector3(ray.Direction - 2 * (Vector3.Dot(ray.Direction, ray.normalAtPoint)) * ray.normalAtPoint);
+                        return p.color * Trace(new Ray(ray.point + epsilon * reflectedDirection, reflectedDirection, maxRayDistance));
                     }
-                    else
-                    {
-                        recursionCounter = 0;
-                        return new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal, Vector3.Zero);
-                    }
+                    else { return Vector3.Zero; }
                 }
-                else
-                {
-                    recursionCounter = 0;
-                    return new Intersection(point, ray.distance, ray.nearestPrimitive, ray.nearestPrimitive.normal, ray.nearestPrimitive.color);
-                }
+                return DirectIllumination(ray) * p.color;
             }
-            else
-            {
-                return new Intersection(point, ray.distance, ray.nearestPrimitive, Vector3.Zero, Vector3.Zero);
-            }
+            else return Vector3.Zero;
         }
-        
+        public Vector3 DirectIllumination(Ray ray)
+        {
+            //if the ray distance actually decreased
+            Vector3 intensity = Vector3.Zero;
+            //make shadowrays for all lightsources and intersect them
+            foreach (Light l in lightsources)
+            {
+                Vector3 lightDirection = l.location - ray.point;
+                float nDotL = Vector3.Dot(lightDirection.Normalized(), ray.normalAtPoint);
+                if (nDotL > 0)
+                {
+                    Ray shadowray = new Ray(ray.point + epsilon * lightDirection, Vector3.Normalize(lightDirection), lightDirection.Length -
+                        2 * (epsilon * lightDirection).Length);
+                    if (!IntersectShadowRay(shadowray))
+                    {
+                        //distance attenuation and N dot L clamped to 0
+                        intensity += l.intensity * (float)(1 / (Math.PI * 4 * Math.Pow(lightDirection.Length, 2))) * Math.Max(0, nDotL);
+                    }
+                }
+            }
+            return intensity;
+        }
         public void AddPrimitive(Primitive p)
         {
             primitives.Add(p);

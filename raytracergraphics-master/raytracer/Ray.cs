@@ -14,8 +14,10 @@ namespace Template
         public Vector3 Direction;
         public float distance;
         public Primitive nearestPrimitive;
+        public Vector3 point;
+        public Vector3 normalAtPoint;
 
-        public Ray(Vector3 start, Vector3 direction,float distance)
+        public Ray(Vector3 start, Vector3 direction, float distance)
         {
             this.Origin = start;
             this.Direction = direction.Normalized();
