@@ -70,12 +70,16 @@ namespace Template
                 float nDotL = Vector3.Dot(lightDirection.Normalized(), ray.normalAtPoint);
                 if (nDotL > 0)
                 {
-                    Ray shadowray = new Ray(ray.point + epsilon * lightDirection, Vector3.Normalize(lightDirection), lightDirection.Length -
-                        2 * (epsilon * lightDirection).Length);
-                    if (!IntersectShadowRay(shadowray))
+                    float spotlightAngle = (float)Math.Acos(Vector3.Dot(l.spotLightDirection, -lightDirection.Normalized()));
+                    if (((spotlightAngle < l.spotlightAngle&&spotlightAngle>0 )|| !l.isSpotlight))
                     {
-                        //distance attenuation and N dot L clamped to 0
-                        intensity += l.intensity * (float)(1 / (Math.PI * 4 * Math.Pow(lightDirection.Length, 2))) * Math.Max(0, nDotL);
+                        Ray shadowray = new Ray(ray.point + epsilon * lightDirection, Vector3.Normalize(lightDirection), lightDirection.Length -
+                            2 * (epsilon * lightDirection).Length);
+                        if (!IntersectShadowRay(shadowray))
+                        {
+                            //distance attenuation and N dot L clamped to 0
+                            intensity += l.intensity * (float)(1 / (Math.PI * 4 * Math.Pow(lightDirection.Length, 2))) * Math.Max(0, nDotL);
+                        }
                     }
                 }
             }
