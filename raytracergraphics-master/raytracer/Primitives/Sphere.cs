@@ -46,6 +46,10 @@ namespace Template
             }
             //normal at the point is -c.Normalized
         }
+        public override Vector3 getColor(Vector3 point)
+        {
+            return this.color;
+        }
 
     }
 }

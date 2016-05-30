@@ -21,7 +21,7 @@ namespace Template
             lightsources = lList;
             epsilon = 0.0001f;
             recursionCounter = 0;
-            recursionDepth = 2;
+            recursionDepth = 20;
             maxRayDistance = 100f;
         }
 
@@ -43,21 +43,27 @@ namespace Template
         public Vector3 Trace(Ray ray)
         {
             ray = ReturnClosestIntersection(ray);
-            Primitive p = ray.nearestPrimitive;
             if (ray.distance < maxRayDistance)
             {
+                Primitive p = ray.nearestPrimitive;
+                Vector3 color = p.getColor(ray.point);
                 if (p.isSpecular)
                 {
                     if (recursionCounter < recursionDepth)
                     {
+                        recursionCounter += 1;
                         Vector3 reflectedDirection = new Vector3(ray.Direction - 2 * (Vector3.Dot(ray.Direction, ray.normalAtPoint)) * ray.normalAtPoint);
-                        return p.color * Trace(new Ray(ray.point + epsilon * reflectedDirection, reflectedDirection, maxRayDistance));
+                        return color * Trace(new Ray(ray.point + epsilon * reflectedDirection, reflectedDirection, maxRayDistance));
                     }
                     else { return Vector3.Zero; }
                 }
-                return DirectIllumination(ray) * p.color;
+                recursionCounter = 0;
+                return DirectIllumination(ray) * p.getColor(ray.point);
             }
-            else return Vector3.Zero;
+            else {
+                recursionCounter = 0;
+                return Vector3.Zero;
+            }
         }
         public Vector3 DirectIllumination(Ray ray)
         {

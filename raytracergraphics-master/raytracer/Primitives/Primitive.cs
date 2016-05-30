@@ -27,5 +27,9 @@ namespace Template
         {
             
         }
+        public virtual Vector3 getColor(Vector3 point)
+        {
+            return Vector3.Zero;
+        }
     }
 }

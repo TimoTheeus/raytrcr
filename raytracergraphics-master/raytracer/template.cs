@@ -80,10 +80,12 @@ namespace Template
 			// tell OpenTK we're done rendering
 			SwapBuffers();
 		}
+
 		public static void Main( string[] args ) 
 		{ 
 			// entry point
 			using (OpenTKApp app = new OpenTKApp()) { app.Run( 30.0, 0.0 ); }
 		}
+
 	}
 }

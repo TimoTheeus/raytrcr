@@ -30,7 +30,7 @@ namespace Template
 
         public override void Intersect(Ray ray)
         {
-            float distance = (Vector3.Dot(ray.Origin, this.normal) + this.distanceToOrigin) / Vector3.Dot(ray.Direction, this.normal);
+            float distance = -((Vector3.Dot(ray.Origin, this.normal) + this.distanceToOrigin) / Vector3.Dot(ray.Direction, this.normal));
             if (distance <= 0)
             {
                 return;
@@ -38,22 +38,22 @@ namespace Template
             if (distance < ray.distance)
             {
                 ray.distance = distance;
-
-                Vector3 point = ray.Origin + (ray.distance * ray.Direction);
-
-                if (point.X > -textureWidth && point.X < textureWidth && point.Z < textureHeight && point.Z > 0)
-                {
-                    if ((point.X + textureWidth) % 2 >= 1 != (point.Z + textureWidth) % 2 > 1)
-                        color = color1;
-                    else
-                        color = color2;
-                }
-                else
-                    color = Vector3.Zero;
-
-
                 ray.nearestPrimitive = this;
             }
+        }
+        public override Vector3 getColor(Vector3 point)
+        {
+            Vector3 color = color1;
+            if (point.X > -textureWidth && point.X < textureWidth && point.Z < textureHeight && point.Z > 0)
+            {
+                if ((point.X + textureWidth) % 2 >= 1 != (point.Z + textureWidth) % 2 > 1)
+                    color = color1;
+                else
+                    color = color2;
+            }
+            else
+                color = color2;
+            return color;
         }
     }
 }

@@ -37,20 +37,25 @@ namespace Template
             var state = Keyboard.GetState();
             if (state.IsKeyDown(Key.Right))
             {
+                raytracer.cameraIsMoving = true;
                 raytracer.camera.RotateRight(timeElapsed);
             }
-            if (state.IsKeyDown(Key.Up))
+            else if (state.IsKeyDown(Key.Up))
             {
+                raytracer.cameraIsMoving = true;
                 raytracer.camera.RotateUp(timeElapsed);
             }
-            if (state.IsKeyDown(Key.Down))
+            else if (state.IsKeyDown(Key.Down))
             {
+                raytracer.cameraIsMoving = true;
                 raytracer.camera.RotateDown(timeElapsed);
             }
-            if (state.IsKeyDown(Key.Left))
+            else if (state.IsKeyDown(Key.Left))
             {
+                raytracer.cameraIsMoving = true;
                 raytracer.camera.RotateLeft(timeElapsed);
             }
+            else { raytracer.cameraIsMoving = false; }
         }
     }
 }
