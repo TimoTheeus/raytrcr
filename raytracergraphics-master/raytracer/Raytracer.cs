@@ -27,8 +27,18 @@ namespace Template
             for (int x = 0; x < halfDisplayWidth; x++)
                 for (int y = 0; y < display.height; y++)
                 {
-                    Ray ray = camera.CreatePrimaryRay(x, y);
-                    Vector3 color = floatColorToInt(scene.Trace(ray));
+                    Ray ray = scene.ReturnClosestIntersection(camera.CreatePrimaryRay(x, y));
+                    Vector3 color;
+                    if (ray.nearestPrimitive != null)
+                    {
+                        if(ray.nearestPrimitive.isSpecular)
+                         color = floatColorToInt(scene.Trace(ray)*ray.nearestPrimitive.specularity+scene.DirectIllumination(ray)*ray.nearestPrimitive.color*(1-ray.nearestPrimitive.specularity));
+                        else { color = floatColorToInt(scene.Trace(ray)); }
+                    }
+                    else
+                    {
+                        color = Vector3.Zero;
+                    }
                     if (x % 10 == 0 && y == display.height / 2)
                     {
                         if (ray.normalAtPoint == Vector3.Zero)

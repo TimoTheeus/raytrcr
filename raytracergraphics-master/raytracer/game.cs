@@ -75,7 +75,7 @@ class Game
         void AddPrimitives()
         {
             //Specular bol met een kleur
-            Sphere specularSphere = new Sphere(new Vector3(2.5f, 0, 3f), 1f, new Vector3(1f, 1f, 1f));
+            Sphere specularSphere = new Sphere(new Vector3(2.5f, 0, 3f), 1f, new Vector3(0f, 1f, 1f));
             specularSphere.isSpecular = true;
             s.AddPrimitive(specularSphere);
             //Specular bol met een kleur
