@@ -68,8 +68,11 @@ namespace Template
             {
                 Vector3 lightDirection = l.location - ray.point;
                 float nDotL = Vector3.Dot(lightDirection.Normalized(), ray.normalAtPoint);
+                //if nDotL>0, prevent shadowrays
                 if (nDotL > 0)
                 {
+                    //For spotlights, Only create shadowrays and thus (potentialliy)increase light intensity at that point
+                    //if the angle between lightdirection and spotlightdirection<spotlightangle
                     float spotlightAngle = (float)Math.Acos(Vector3.Dot(l.spotLightDirection, -lightDirection.Normalized()));
                     if (((spotlightAngle < l.spotlightAngle&&spotlightAngle>0 )|| !l.isSpotlight))
                     {
