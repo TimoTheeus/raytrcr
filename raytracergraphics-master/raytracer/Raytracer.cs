@@ -110,15 +110,6 @@ namespace Template
         }
         public void DrawLine(Ray ray,int color)
         {
-            //if the points are outside of the screen, draw the line till the end of the screen;
-            /* int pointX= TX(ray.point.X, centerX);
-              int pointY = TY(ray.point.Z, centerY);
-              if (pointX < 0) pointX = 1;
-              else if (pointX >= display.width) pointX = display.width - 1;
-              if (pointY < 0) pointY = 1;
-              else if (pointY >= display.height) pointY = display.height - 1;*/
-            //draw the line
-            
             display.Line(TX(ray.Origin.X, centerX), TY(ray.Origin.Z, centerY), TX(ray.point.X, centerX), TY(ray.point.Z, centerY), color);
         }
         //transform x value based on the center location
