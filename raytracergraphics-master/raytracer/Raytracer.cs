@@ -79,6 +79,11 @@ namespace Template
                             {
                                 DrawLine(r, CreateColor(255, 255, 0));
                             }
+                            //refraction rays are white
+                            foreach (Ray r in scene.refractionRays)
+                            {
+                                DrawLine(r, CreateColor(255, 255, 255));
+                            }
                         }
                         display.Line(TX(camera.Upperleft.X, centerX), TY(camera.Upperleft.Z, centerY), TX(camera.Upperright.X, centerX), TY(camera.Upperright.Z, centerY), CreateColor(255, 255, 255));
                         display.Box(cameraPositionX, cameraPositionY, cameraPositionX - 1, cameraPositionY + 1, CreateColor(255, 255, 0));
@@ -108,6 +113,7 @@ namespace Template
         {
             Vector3 color;
             scene.reflectedRays.Clear();
+            scene.refractionRays.Clear();
             if (ray.nearestPrimitive != null)
             {
                 if (ray.nearestPrimitive.isSpecular)
@@ -152,7 +158,7 @@ namespace Template
             Vector3 color = Vector3.Zero;
             Random rng = new Random();
             float p,q;
-            int nmRays = 5;
+            int nmRays = 1;
 
             for(int i = 0; i < nmRays; i++)
             {

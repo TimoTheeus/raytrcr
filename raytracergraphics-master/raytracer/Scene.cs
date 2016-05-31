@@ -18,6 +18,7 @@ namespace Template
         public List<Ray> reflectedRays;
         public List<Ray> shadowRays;
         public List<Ray> directIlluminationRays;
+        public List<Ray> refractionRays;
         public Scene(List<Primitive> pList, List<Light> lList)
         {
             primitives = pList;
@@ -29,6 +30,7 @@ namespace Template
             reflectedRays = new List<Ray>();
             shadowRays = new List<Ray>();
             directIlluminationRays = new List<Ray>();
+            refractionRays = new List<Ray>();
         }
 
         public Ray ReturnClosestIntersection(Ray ray)
@@ -108,7 +110,6 @@ namespace Template
         }
         public Ray refraction(Ray ray,bool outsideSphere)
         {
-            recursionCounter += 1;
             float k;
             float cos1 = Vector3.Dot(ray.normalAtPoint.Normalized(), -ray.Direction.Normalized());
             Ray rayOut;
@@ -133,6 +134,7 @@ namespace Template
             {
                 Vector3 refractedDirection = ((dividedindexes * ray.Direction) + ray.normalAtPoint * (float)((dividedindexes * cos1) - Math.Sqrt(k)));
                 rayOut = new Ray(ray.point + epsilon * refractedDirection, refractedDirection, maxRayDistance);
+                refractionRays.Add(rayOut);
             }
             return rayOut;
         }
