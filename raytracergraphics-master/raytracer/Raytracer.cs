@@ -60,7 +60,7 @@ namespace Template
                     if ((x % 3 == 0&&y%3==0) || !cameraIsMoving)
                     {
                         Ray ray = scene.ReturnClosestIntersection(camera.CreatePrimaryRay(x, y));
-                        Vector3 color= returnColor(ray);
+                        Vector3 color= AverageColor(x, y);
                         if (x % 10 == 0 && y == display.height / 2)
                         {
                             DrawLine(ray,CreateColor(255,0,0));
@@ -144,5 +144,24 @@ namespace Template
             return (int)number * 255;
         }
 
+        public Vector3 AverageColor(int x, int y)
+        {
+            Vector3 color = Vector3.Zero;
+            Random rng = new Random();
+            float p,q;
+            int nmRays = 5;
+
+            for(int i = 0; i < nmRays; i++)
+            {
+                p = (float)rng.NextDouble();
+                q = (float)rng.NextDouble();
+                Ray ray1 = scene.ReturnClosestIntersection(camera.CreatePrimaryRay(x + p , y + q));
+                color += returnColor(ray1);
+            }
+
+            color = color / nmRays;
+            
+            return color;
+        }
     }
 }
