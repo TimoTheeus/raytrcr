@@ -31,20 +31,7 @@ namespace Template
                     if ((x % 3 == 0&&y%3==0) || !cameraIsMoving)
                     {
                         Ray ray = scene.ReturnClosestIntersection(camera.CreatePrimaryRay(x, y));
-                        Vector3 color;
-                        if (ray.nearestPrimitive != null)
-                        {
-                            if (ray.nearestPrimitive.isSpecular)
-                            {
-                                color = floatColorToInt(scene.Trace(ray) * ray.nearestPrimitive.specularity + scene.DirectIllumination(ray)
-                                    * ray.nearestPrimitive.getColor(ray.point) * (1 - ray.nearestPrimitive.specularity));
-                            }
-                            else { color = floatColorToInt(scene.Trace(ray)); }
-                        }
-                        else
-                        {
-                            color = Vector3.Zero;
-                        }
+                        Vector3 color= returnColor(ray);
                         if (x % 10 == 0 && y == display.height / 2)
                         {
                             if (ray.normalAtPoint == Vector3.Zero)
@@ -75,6 +62,24 @@ namespace Template
         public int ScreenCoordinatesZ(double number)
         {
             return (int)((10 - number) * 50);
+        }
+        public Vector3 returnColor(Ray ray)
+        {
+            Vector3 color;
+            if (ray.nearestPrimitive != null)
+            {
+                if (ray.nearestPrimitive.isSpecular)
+                {
+                    color = floatColorToInt(scene.Trace(ray) * ray.nearestPrimitive.specularity + scene.DirectIllumination(ray)
+                        * ray.nearestPrimitive.getColor(ray.point) * (1 - ray.nearestPrimitive.specularity));
+                }
+                else { color = floatColorToInt(scene.Trace(ray)); }
+            }
+            else
+            {
+                color = Vector3.Zero;
+            }
+            return color;
         }
     }
 }
