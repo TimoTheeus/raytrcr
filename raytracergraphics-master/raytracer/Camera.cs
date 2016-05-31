@@ -81,25 +81,25 @@ namespace Template
         public void RotateRight(double timeElapsed)
         {
             Vector3 target = position + viewDirection;
-            target += Vector3.Cross(Center,Up* (float)timeElapsed);
+            target += Right * 0.1f;
             viewDirection = Vector3.Normalize(target - position);
         }
         public void RotateUp(double timeElapsed)
         {
             Vector3 target = position + viewDirection;
-            target += Vector3.Cross(Center, Left * (float)timeElapsed);
+            target += Up * 0.1f;
             viewDirection = Vector3.Normalize(target - position);
         }
         public void RotateLeft(double timeElapsed)
         {
             Vector3 target = position + viewDirection;
-            target += Vector3.Cross(Center, Down * (float)timeElapsed);
+            target += Left * 0.1f;
             viewDirection = Vector3.Normalize(target - position);
         }
         public void RotateDown(double timeElapsed)
         {
             Vector3 target = position + viewDirection;
-            target += Vector3.Cross(Center, Right * (float)timeElapsed);
+            target += Down * 0.1f;
             viewDirection = Vector3.Normalize(target - position);
         }
     }
