@@ -17,11 +17,24 @@ namespace Template
         public bool isSpecular;
         //0-1f
         public float specularity;
-     
+        //Dielectric or not
+        public bool isDielectric;
+        public float airToGlassIndex;
+        public float glassToAirIndex;
+        public float dividedIndexes;
+        public float dividedIndexesInverted;
+        public float fresnelR;
+        public float fresnelRInverted;
         public Primitive(Vector3 c)
         {
             color = c;
             specularity = 0.5f;
+            airToGlassIndex = 1.5f;
+            glassToAirIndex = 1 / airToGlassIndex;
+            dividedIndexes = airToGlassIndex / glassToAirIndex;
+            dividedIndexesInverted = glassToAirIndex / airToGlassIndex;
+            fresnelR = (float)Math.Pow(((airToGlassIndex - glassToAirIndex) / (airToGlassIndex + glassToAirIndex)),2);
+            fresnelRInverted = (float)Math.Pow(((glassToAirIndex-airToGlassIndex) / (airToGlassIndex + glassToAirIndex)),2);
         }
         public virtual void Intersect(Ray ray)
         {

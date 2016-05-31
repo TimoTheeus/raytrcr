@@ -54,13 +54,13 @@ class Game
             //Specular bollen met een kleur
             Sphere specularSphere = new Sphere(new Vector3(2.5f, 0, 4f), 1f, new Vector3(1f, 1f, 1f));
             Sphere specularSphere2 = new Sphere(new Vector3(-2.5f, 0, 4f), 1f, new Vector3(0, 1f, 0));
-            Sphere specularSphere3 = new Sphere(new Vector3(0, 0, 3f), 1f, new Vector3(1f, 0, 0));
+            Sphere specularSphere3 = new Sphere(new Vector3(-1, 0, 2f), 1f, new Vector3(1f, 1f,1f));
             specularSphere.isSpecular = true;
             specularSphere2.isSpecular = true;
-            specularSphere3.isSpecular = true;
+            specularSphere3.isDielectric = true;
             specularSphere.specularity = 1f;
             specularSphere2.specularity = 0.5f;
-            specularSphere3.specularity = 0.7f;
+            specularSphere3.specularity = 1f;
             s.AddPrimitive(specularSphere);
             s.AddPrimitive(specularSphere2);
             s.AddPrimitive(specularSphere3);

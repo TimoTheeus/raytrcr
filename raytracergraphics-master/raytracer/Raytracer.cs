@@ -64,17 +64,20 @@ namespace Template
                         if (x % 10 == 0 && y == display.height / 2)
                         {
                             DrawLine(ray,CreateColor(255,0,0));
+                            //shadow rays are blue
                             foreach (Ray r in scene.shadowRays)
                             {
                                 DrawLine(r,CreateColor(0,0,255));
                             }
+                            //directilluminationrays are green
                             foreach (Ray r in scene.directIlluminationRays)
                             {
                                 DrawLine(r, CreateColor(0, 255, 0));
                             }
+                            //reflectedrays are yellow
                             foreach (Ray r in scene.reflectedRays)
                             {
-                                DrawLine(r, CreateColor(0, 255, 255));
+                                DrawLine(r, CreateColor(255, 255, 0));
                             }
                         }
                         display.Line(TX(camera.Upperleft.X, centerX), TY(camera.Upperleft.Z, centerY), TX(camera.Upperright.X, centerX), TY(camera.Upperright.Z, centerY), CreateColor(255, 255, 255));

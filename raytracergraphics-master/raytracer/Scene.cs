@@ -58,14 +58,34 @@ namespace Template
                 {
                     if (recursionCounter < recursionDepth)
                     {
-                        if(recursionCounter>0)
-                        reflectedRays.Add(ray);
-                        recursionCounter += 1;
-                        Vector3 reflectedDirection = new Vector3(ray.Direction - 2 * (Vector3.Dot(ray.Direction, ray.normalAtPoint)) * ray.normalAtPoint);
-                        Ray reflectedRay = new Ray(ray.point + epsilon * reflectedDirection, reflectedDirection, maxRayDistance);
-                        return color * Trace(reflectedRay);
+                        return color * Trace(reflect(ray));
                     }
-                    else { return Vector3.Zero; }
+                    else {  return Vector3.Zero; }
+                }
+                else if (p.isDielectric)
+                {
+                    if (recursionCounter < recursionDepth)
+                    {
+                        Sphere sphere = ray.nearestPrimitive as Sphere;
+                        Vector3 pMinC = ray.Origin - sphere.position;
+                        float f;
+                        if ((Vector3.Dot(pMinC, pMinC) - Math.Pow(sphere.radius, 2)) > 0)
+                        {
+                            f = Fresnel(ray, true);
+                            return (f * Trace(reflect(ray)) + (1 - f) * Trace(refraction(ray, true))) * color;
+                        }
+                        else
+                        {
+                            f = Fresnel(ray, false);
+                            return (f * Trace(reflect(ray)) + (1 - f) * Trace(refraction(ray, false))) * color;
+                        }
+                    }
+                    else
+                    {
+                        recursionCounter = 0;
+                        return Vector3.Zero;
+                    }
+                        
                 }
                 return DirectIllumination(ray) * p.getColor(ray.point);
             }
@@ -73,6 +93,57 @@ namespace Template
                 recursionCounter = 0;
                 return Vector3.Zero;
             }
+        }
+        public float Fresnel(Ray ray, bool outsideSphere)
+        {
+            float cos1 = Vector3.Dot(ray.normalAtPoint.Normalized(), -ray.Direction.Normalized());
+            if (outsideSphere)
+            {
+                return (ray.nearestPrimitive.fresnelR + (1 - ray.nearestPrimitive.fresnelR) * (float)Math.Pow((1 - cos1), 5));
+            }
+            else
+            {
+                return (ray.nearestPrimitive.fresnelRInverted + (1 - ray.nearestPrimitive.fresnelRInverted) * (float)Math.Pow((1 - cos1), 5));
+            }
+        }
+        public Ray refraction(Ray ray,bool outsideSphere)
+        {
+            recursionCounter += 1;
+            float k;
+            float cos1 = Vector3.Dot(ray.normalAtPoint.Normalized(), -ray.Direction.Normalized());
+            Ray rayOut;
+            float dividedindexes;
+            //if ray origin in outside sphere(then its air to glass)
+            if(outsideSphere)
+            {
+                k = 1 - (float)(Math.Pow(ray.nearestPrimitive.dividedIndexes, 2) * (1 - Math.Pow(cos1, 2)));
+                dividedindexes = ray.nearestPrimitive.dividedIndexes;
+            }
+            else
+            {
+                k = 1 - (float)(Math.Pow(ray.nearestPrimitive.dividedIndexesInverted, 2) * (1 - Math.Pow(cos1, 2)));
+                dividedindexes = ray.nearestPrimitive.dividedIndexesInverted;
+            }
+            if (k < 0)
+            {
+                //total reflection
+                rayOut = reflect(ray);
+            }
+            else
+            {
+                Vector3 refractedDirection = ((dividedindexes * ray.Direction) + ray.normalAtPoint * (float)((dividedindexes * cos1) - Math.Sqrt(k)));
+                rayOut = new Ray(ray.point + epsilon * refractedDirection, refractedDirection, maxRayDistance);
+            }
+            return rayOut;
+        }
+        public Ray reflect(Ray ray)
+        {
+            if (recursionCounter > 0)
+                reflectedRays.Add(ray);
+            recursionCounter += 1;
+            Vector3 reflectedDirection = new Vector3(ray.Direction - 2 * (Vector3.Dot(ray.Direction, ray.normalAtPoint)) * ray.normalAtPoint);
+            Ray reflectedRay = new Ray(ray.point + epsilon * reflectedDirection, reflectedDirection, maxRayDistance);
+            return reflectedRay;
         }
         public Vector3 DirectIllumination(Ray ray)
         {
@@ -87,7 +158,7 @@ namespace Template
                 Vector3 lightDirection = l.location - ray.point;
                 float nDotL = Vector3.Dot(lightDirection.Normalized(), ray.normalAtPoint);
                 //if nDotL>0, prevent shadowrays
-                if (nDotL > 0)
+                if (nDotL > 0||ray.nearestPrimitive.isDielectric)
                 {
                     //For spotlights, Only create shadowrays and thus (potentialliy)increase light intensity at that point
                     //if the angle between lightdirection and spotlightdirection<spotlightangle
@@ -96,7 +167,7 @@ namespace Template
                     {
                         Ray shadowray = new Ray(ray.point + epsilon * lightDirection, Vector3.Normalize(lightDirection), lightDirection.Length -
                             2 * (epsilon * lightDirection).Length);
-                        if (!IntersectShadowRay(shadowray))
+                        if (!IntersectShadowRay(shadowray)||ray.nearestPrimitive.isDielectric)
                         {
                             //distance attenuation and N dot L clamped to 0
                             intensity += l.intensity * (float)(1 / (Math.PI * 4 * Math.Pow(lightDirection.Length, 2))) * Math.Max(0, nDotL);
