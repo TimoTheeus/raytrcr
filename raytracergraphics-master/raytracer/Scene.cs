@@ -25,7 +25,7 @@ namespace Template
             lightsources = lList;
             epsilon = 0.0001f;
             recursionCounter = 0;
-            recursionDepth = 20;
+            recursionDepth = 3;
             maxRayDistance = 100f;
             reflectedRays = new List<Ray>();
             shadowRays = new List<Ray>();
