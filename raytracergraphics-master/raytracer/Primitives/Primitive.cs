@@ -19,12 +19,14 @@ namespace Template
         public float specularity;
         //Dielectric or not
         public bool isDielectric;
+        //Elements of dielectirc primitives
         public float airToGlassIndex;
         public float glassToAirIndex;
         public float dividedIndexes;
         public float dividedIndexesInverted;
         public float fresnelR;
         public float fresnelRInverted;
+
         public Primitive(Vector3 c)
         {
             color = c;
@@ -33,6 +35,7 @@ namespace Template
             glassToAirIndex = 1 / airToGlassIndex;
             dividedIndexes = airToGlassIndex / glassToAirIndex;
             dividedIndexesInverted = glassToAirIndex / airToGlassIndex;
+            //Calculate R0 and inverted R0 with Fresnel laws
             fresnelR = (float)Math.Pow(((airToGlassIndex - glassToAirIndex) / (airToGlassIndex + glassToAirIndex)),2);
             fresnelRInverted = (float)Math.Pow(((glassToAirIndex-airToGlassIndex) / (airToGlassIndex + glassToAirIndex)),2);
         }

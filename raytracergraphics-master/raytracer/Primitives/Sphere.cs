@@ -23,6 +23,8 @@ namespace Template
             this.normal = Vector3.Zero;
 
         }
+
+        //Calculate if a ray is intersected with a sphere, assign this primitive to the membervariable nearest primitive of the ray
         public override void Intersect(Ray ray)
         {
             Vector3 c = this.position - ray.Origin;
@@ -44,8 +46,9 @@ namespace Template
                     this.normal = -this.normal;
                 }
             }
-            //normal at the point is -c.Normalized
         }
+
+        //Determine the color of a specific point on a sphere
         public override Vector3 getColor(Vector3 point)
         {
             return this.color;

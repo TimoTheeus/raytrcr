@@ -22,6 +22,8 @@ namespace Template
             t = new Stopwatch();
             oneThousandth = (double)(1m / 1000m);
         }
+
+        //Visualizes the scene by rendering the primitives and handling output for the camera
         public void Visualize(List<Primitive> primitiveList)
         {
             t.Reset();
@@ -31,6 +33,8 @@ namespace Template
             t.Stop();
             HandleInput(timeElapsedMilliseconds);
         }
+
+        //Rotate camera with elapsed millisecons with the arrow-keys
         public void HandleInput(double timeElapsedMilliseconds)
         {
             double timeElapsed = (timeElapsedMilliseconds* oneThousandth);

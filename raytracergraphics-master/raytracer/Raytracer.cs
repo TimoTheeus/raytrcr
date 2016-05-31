@@ -118,9 +118,10 @@ namespace Template
             else
             {
                 color = Vector3.Zero;
-            }//draw a line on the debug screen for a ray
+            }
             return color;
         }
+        //draw a line on the debug screen for a ray
         public void DrawLine(Ray ray,int color)
         {
             display.Line(TX(ray.Origin.X, centerX), TY(ray.Origin.Z, centerY), TX(ray.point.X, centerX), TY(ray.point.Z, centerY), color);
@@ -150,7 +151,7 @@ namespace Template
             Vector3 color = Vector3.Zero;
             Random rng = new Random();
             float p,q;
-            int nmRays = 1;
+            int nmRays = 5;
 
             for(int i = 0; i < nmRays; i++)
             {

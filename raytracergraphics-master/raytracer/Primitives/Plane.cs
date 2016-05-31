@@ -28,6 +28,7 @@ namespace Template
 
         }
 
+        //Calculate if a ray is intersected with a plane, assign this primitive to the membervariable nearest primitive of the ray
         public override void Intersect(Ray ray)
         {
             float distance = -((Vector3.Dot(ray.Origin, this.normal) + this.distanceToOrigin) / Vector3.Dot(ray.Direction, this.normal));
@@ -41,6 +42,8 @@ namespace Template
                 ray.nearestPrimitive = this;
             }
         }
+
+        //Determine the color of a specific point on a plane
         public override Vector3 getColor(Vector3 point)
         {
             Vector3 color = color1;
