@@ -68,7 +68,7 @@ namespace Template
         {
             get { return (position + appliedFieldOfView * viewDirection); }
         }
-        public Ray CreatePrimaryRay(int x, int y)
+        public Ray CreatePrimaryRay(float x, float y)
         {
             float u = x * displayWidth*2;
             float v = y * displayHeight;
