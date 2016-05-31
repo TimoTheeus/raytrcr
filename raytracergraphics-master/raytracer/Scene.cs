@@ -15,6 +15,9 @@ namespace Template
         int recursionCounter;
         int recursionDepth;
         float maxRayDistance;
+        public List<Ray> reflectedRays;
+        public List<Ray> shadowRays;
+        public List<Ray> directIlluminationRays;
         public Scene(List<Primitive> pList, List<Light> lList)
         {
             primitives = pList;
@@ -23,6 +26,9 @@ namespace Template
             recursionCounter = 0;
             recursionDepth = 20;
             maxRayDistance = 100f;
+            reflectedRays = new List<Ray>();
+            shadowRays = new List<Ray>();
+            directIlluminationRays = new List<Ray>();
         }
 
         public Ray ReturnClosestIntersection(Ray ray)
@@ -43,7 +49,8 @@ namespace Template
         public Vector3 Trace(Ray ray)
         {
             ray = ReturnClosestIntersection(ray);
-            if (ray.distance < maxRayDistance)
+            directIlluminationRays.Clear();
+            if (ray.distance < maxRayDistance&&ray.distance>0)
             {
                 Primitive p = ray.nearestPrimitive;
                 Vector3 color = p.getColor(ray.point);
@@ -51,13 +58,15 @@ namespace Template
                 {
                     if (recursionCounter < recursionDepth)
                     {
+                        if(recursionCounter>0)
+                        reflectedRays.Add(ray);
                         recursionCounter += 1;
                         Vector3 reflectedDirection = new Vector3(ray.Direction - 2 * (Vector3.Dot(ray.Direction, ray.normalAtPoint)) * ray.normalAtPoint);
-                        return color * Trace(new Ray(ray.point + epsilon * reflectedDirection, reflectedDirection, maxRayDistance));
+                        Ray reflectedRay = new Ray(ray.point + epsilon * reflectedDirection, reflectedDirection, maxRayDistance);
+                        return color * Trace(reflectedRay);
                     }
                     else { return Vector3.Zero; }
                 }
-                recursionCounter = 0;
                 return DirectIllumination(ray) * p.getColor(ray.point);
             }
             else {
@@ -67,6 +76,9 @@ namespace Template
         }
         public Vector3 DirectIllumination(Ray ray)
         {
+            shadowRays.Clear();
+            if(recursionCounter>0)
+            directIlluminationRays.Add(ray);
             //if the ray distance actually decreased
             Vector3 intensity = Vector3.Zero;
             //make shadowrays for all lightsources and intersect them
@@ -92,6 +104,7 @@ namespace Template
                     }
                 }
             }
+            recursionCounter = 0;
             return intensity;
         }
         public void AddPrimitive(Primitive p)
@@ -110,13 +123,24 @@ namespace Template
             {
                 p.Intersect(r);
             }
+            
             //if the new distance is between the max distance and 0, return true
             if (r.distance < maxDistance && r.distance > 0)
             {
+                
+                r.point = r.Origin + r.distance * r.Direction;
+                shadowRays.Add(r);
                 return true;
             }
+            else if (r.distance < 0)
+            {
+                return false;
+            }
             //else false
-            else { return false; }
+            else {
+                r.point = r.Origin + r.distance * r.Direction;
+                shadowRays.Add(r);
+                return false; }
         }
     }
 }

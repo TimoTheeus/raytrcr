@@ -16,12 +16,29 @@ namespace Template
         public Surface display;
         int halfDisplayWidth;
         public bool cameraIsMoving;
+        //the world the debug output draws in
+        float worldX;
+        float worldY;
+        //center of the debug output
+        float centerX;
+        float centerY;
+        //for drawing the small dot at cameraposition, since the camera doesnt move.
+        int cameraPositionX;
+        int cameraPositionY;
         public Raytracer(Scene rs, Camera rc, Surface surface)
         {
             scene = rs;
             camera = rc;
             display = surface;
             halfDisplayWidth = display.width / 2;
+            //6 by 6 box to draw the debug output in
+            worldX = 6;
+            worldY = 6;
+            //draw it on the right side of the screen.
+            centerX = halfDisplayWidth+(halfDisplayWidth/2);
+            centerY = display.height / 2;
+            cameraPositionX = TX(camera.position.X, centerX);
+            cameraPositionY = TY(camera.position.Z, centerY);
         }
         public void Render()
         {
@@ -34,13 +51,22 @@ namespace Template
                         Vector3 color= returnColor(ray);
                         if (x % 10 == 0 && y == display.height / 2)
                         {
-                            if (ray.normalAtPoint == Vector3.Zero)
+                            DrawLine(ray,CreateColor(255,0,0));
+                            foreach (Ray r in scene.shadowRays)
                             {
-                                display.Line(ScreenCoordinatesX(camera.position.X + 5), ScreenCoordinatesZ(camera.position.Z), ScreenCoordinatesX((ray.point.X) / 20 + 5), ScreenCoordinatesZ(ray.point.Z / 20), 100 * 256 * 256 + 100 * 256);
+                                DrawLine(r,CreateColor(0,0,255));
                             }
-                            else
-                                display.Line(ScreenCoordinatesX(camera.position.X + 5), ScreenCoordinatesZ(camera.position.Z), ScreenCoordinatesX(ray.point.X + 5), ScreenCoordinatesZ(ray.point.Z), 255 * 256 * 256 + 255 * 256);
+                            foreach (Ray r in scene.directIlluminationRays)
+                            {
+                                DrawLine(r, CreateColor(0, 255, 0));
+                            }
+                            foreach (Ray r in scene.reflectedRays)
+                            {
+                                DrawLine(r, CreateColor(0, 255, 255));
+                            }
                         }
+                        display.Line(TX(camera.Upperleft.X, centerX), TY(camera.Upperleft.Z, centerY), TX(camera.Upperright.X, centerX), TY(camera.Upperright.Z, centerY), CreateColor(255, 255, 255));
+                        display.Box(cameraPositionX, cameraPositionY, cameraPositionX - 1, cameraPositionY + 1, CreateColor(255, 255, 0));
                         display.pixels[x + y * display.width] = CreateColor((int)color.X, (int)color.Y, (int)color.Z);
                     }
                 }
@@ -66,6 +92,7 @@ namespace Template
         public Vector3 returnColor(Ray ray)
         {
             Vector3 color;
+            scene.reflectedRays.Clear();
             if (ray.nearestPrimitive != null)
             {
                 if (ray.nearestPrimitive.isSpecular)
@@ -80,6 +107,29 @@ namespace Template
                 color = Vector3.Zero;
             }
             return color;
+        }
+        public void DrawLine(Ray ray,int color)
+        {
+            //if the points are outside of the screen, draw the line till the end of the screen;
+            /* int pointX= TX(ray.point.X, centerX);
+              int pointY = TY(ray.point.Z, centerY);
+              if (pointX < 0) pointX = 1;
+              else if (pointX >= display.width) pointX = display.width - 1;
+              if (pointY < 0) pointY = 1;
+              else if (pointY >= display.height) pointY = display.height - 1;*/
+            //draw the line
+            
+            display.Line(TX(ray.Origin.X, centerX), TY(ray.Origin.Z, centerY), TX(ray.point.X, centerX), TY(ray.point.Z, centerY), color);
+        }
+        //transform x value based on the center location
+        int TX(float x, float centerX)
+        {
+            return (int)((x + worldX) * (halfDisplayWidth / (2 * worldX)) - (-centerX + (float)halfDisplayWidth / 2));
+        }
+        //transform Y value based on the center location
+        int TY(float y, float centerY)
+        {
+            return (int)((-y + worldY) * (display.height / (2 * worldY)) - (-centerY + ((float)display.height / 2)));
         }
     }
 }

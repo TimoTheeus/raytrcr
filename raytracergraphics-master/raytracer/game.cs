@@ -36,8 +36,6 @@ class Game
         {
             screen.Clear(0);
             app.Visualize();
-            screen.Box(ScreenCoordinatesX(cam.position.X + 5) - 1, ScreenCoordinatesZ(cam.position.Z), ScreenCoordinatesX(cam.position.X + 5) + 1, ScreenCoordinatesZ(cam.position.Z) + 2, 256 * 256 * 255 + 256 * 255);
-
             foreach (Primitive primitive in primitiveList)
             {
                 if (primitive is Sphere)
@@ -49,11 +47,6 @@ class Game
                     }
                 }
             }
-            screen.Line(ScreenCoordinatesX(cam.position.X + 5 + cam.viewDirection.X - cam.viewDirection.Z),
-                ScreenCoordinatesZ(cam.position.Z + cam.viewDirection.Z + cam.viewDirection.X / Math.Sqrt(Math.Pow(cam.viewDirection.X, 2) + Math.Pow(cam.viewDirection.Z, 2))),
-                ScreenCoordinatesX(cam.position.X + 5 + cam.viewDirection.X + cam.viewDirection.Z),
-                ScreenCoordinatesZ(cam.position.Z + cam.viewDirection.Z - cam.viewDirection.X / Math.Sqrt(Math.Pow(cam.viewDirection.X, 2) + Math.Pow(cam.viewDirection.Z, 2))),
-                255*256*256 + 255*256 + 255);
         }
 
         public int ScreenCoordinatesX(double number)
