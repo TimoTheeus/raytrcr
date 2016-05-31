@@ -43,7 +43,7 @@ namespace Template
         public void Render(List<Primitive> primitiveList)
         {
             foreach (Primitive primitive in primitiveList)
-            {
+            {//Draw the speres on the debug output
                 if (primitive is Sphere)
                 {
                     Sphere sphere = primitive as Sphere;
@@ -53,7 +53,7 @@ namespace Template
                     }
                 }
             }
-
+            //for every pixel, cast a ray to determine the color that should be drawn.
             for (int x = 0; x < halfDisplayWidth; x++)
                 for (int y = 0; y < display.height; y++)
                 {
@@ -84,7 +84,7 @@ namespace Template
                             {
                                 DrawLine(r, CreateColor(255, 255, 255));
                             }
-                        }
+                        }//Draw the camera and screen on the debug output
                         display.Line(TX(camera.Upperleft.X, centerX), TY(camera.Upperleft.Z, centerY), TX(camera.Upperright.X, centerX), TY(camera.Upperright.Z, centerY), CreateColor(255, 255, 255));
                         display.Box(cameraPositionX, cameraPositionY, cameraPositionX - 1, cameraPositionY + 1, CreateColor(255, 255, 0));
                         display.pixels[x + y * display.width] = CreateColor((int)color.X, (int)color.Y, (int)color.Z);
@@ -92,23 +92,15 @@ namespace Template
                 }
         }
         Vector3 floatColorToInt(Vector3 floatColorValues)
-        {
+        {//get a vector for the color from floats
             return new Vector3(Math.Min(255, floatColorValues.X * 256.0f), Math.Min(255, floatColorValues.Y * 256.0f), Math.Min(255, floatColorValues.Z * 256.0f));
         }
         int CreateColor(int red, int green, int blue)
-        {
+        {//bitshift colors so you get a good int
             return (red << 16) + (green << 8) + blue;
         }
-
-        public int ScreenCoordinatesX(double number)
-        {
-            return (int)(number * 50 + 512);
-        }
-
-        public int ScreenCoordinatesZ(double number)
-        {
-            return (int)((10 - number) * 50);
-        }
+        
+        //Determine what color should be drawn for each pixel
         public Vector3 returnColor(Ray ray)
         {
             Vector3 color;
@@ -126,7 +118,7 @@ namespace Template
             else
             {
                 color = Vector3.Zero;
-            }
+            }//draw a line on the debug screen for a ray
             return color;
         }
         public void DrawLine(Ray ray,int color)
@@ -145,7 +137,7 @@ namespace Template
         }
 
         public int ConvertToColor(Vector3 vector)
-        {
+        {//convert a vector3 with colors to an int.
             float number = 0;
             number += vector.X * 256 * 256;
             number += vector.Y * 256;
@@ -154,7 +146,7 @@ namespace Template
         }
 
         public Vector3 AverageColor(int x, int y)
-        {
+        {//determine the average color for the anti aliasing
             Vector3 color = Vector3.Zero;
             Random rng = new Random();
             float p,q;

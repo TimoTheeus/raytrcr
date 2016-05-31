@@ -32,7 +32,7 @@ namespace Template
             directIlluminationRays = new List<Ray>();
             refractionRays = new List<Ray>();
         }
-
+        //return the first intersection, and set the point of intersection and the normal at this point.
         public Ray ReturnClosestIntersection(Ray ray)
         {
             foreach (Primitive p in primitives)
@@ -48,6 +48,7 @@ namespace Template
             return ray;
 
         }
+        //trace where a ray goes in case of reflection or refraction
         public Vector3 Trace(Ray ray)
         {
             ray = ReturnClosestIntersection(ray);
@@ -57,7 +58,7 @@ namespace Template
                 Primitive p = ray.nearestPrimitive;
                 Vector3 color = p.getColor(ray.point);
                 if (p.isSpecular)
-                {
+                {//mirror the ray
                     if (recursionCounter < recursionDepth)
                     {
                         return color * Trace(reflect(ray));
@@ -65,7 +66,7 @@ namespace Template
                     else {  return Vector3.Zero; }
                 }
                 else if (p.isDielectric)
-                {
+                {//refract the ray
                     if (recursionCounter < recursionDepth)
                     {
                         Sphere sphere = ray.nearestPrimitive as Sphere;
@@ -97,7 +98,7 @@ namespace Template
             }
         }
         public float Fresnel(Ray ray, bool outsideSphere)
-        {
+        {//Fresnel's law in code form
             float cos1 = Vector3.Dot(ray.normalAtPoint.Normalized(), -ray.Direction.Normalized());
             if (outsideSphere)
             {
@@ -109,7 +110,7 @@ namespace Template
             }
         }
         public Ray refraction(Ray ray,bool outsideSphere)
-        {
+        {//refract the ray - only works for spheres
             float k;
             float cos1 = Vector3.Dot(ray.normalAtPoint.Normalized(), -ray.Direction.Normalized());
             Ray rayOut;
@@ -139,7 +140,7 @@ namespace Template
             return rayOut;
         }
         public Ray reflect(Ray ray)
-        {
+        {//reflect the ray with respect to the normal
             if (recursionCounter > 0)
                 reflectedRays.Add(ray);
             recursionCounter += 1;

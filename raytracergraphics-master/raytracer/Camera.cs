@@ -69,7 +69,7 @@ namespace Template
             get { return (position + appliedFieldOfView * viewDirection); }
         }
         public Ray CreatePrimaryRay(float x, float y)
-        {
+        {//cast a primary ray
             float u = x * displayWidth*2;
             float v = y * displayHeight;
             Vector3 point = Upperleft + u * (Upperright - Upperleft) + v * (Downleft - Upperleft);
@@ -77,7 +77,7 @@ namespace Template
             Ray r = new Ray(this.position, direction,100f);
             return r;
         }
-        
+        //rotate the camera in different directions
         public void RotateRight(double timeElapsed)
         {
             Vector3 target = position + viewDirection;
