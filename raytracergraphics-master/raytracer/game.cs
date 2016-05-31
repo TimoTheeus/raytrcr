@@ -35,18 +35,8 @@ class Game
         public void Tick()
         {
             screen.Clear(0);
-            app.Visualize();
-            foreach (Primitive primitive in primitiveList)
-            {
-                if (primitive is Sphere)
-                {
-                    Sphere sphere = primitive as Sphere;
-                    for (int i = 0; i < 100; i++)
-                    {
-                        screen.Line(ScreenCoordinatesX(Math.Cos(i / (2 * Math.PI)) + sphere.position.X + 5), ScreenCoordinatesZ(Math.Sin(i / (2 * Math.PI)) + sphere.position.Z), ScreenCoordinatesX(Math.Cos((i + 1) / (2 * Math.PI)) + sphere.position.X + 5), ScreenCoordinatesZ(Math.Sin((i + 1) / (2 * Math.PI)) + sphere.position.Z), ConvertToColor(sphere.color));
-                    }
-                }
-            }
+            app.Visualize(primitiveList);
+
         }
 
         public int ScreenCoordinatesX(double number)
@@ -59,15 +49,6 @@ class Game
             return (int)((10 - number) * 50);
         }
         
-        public int ConvertToColor(Vector3 vector)
-        {
-            float number = 0;
-            number += vector.X * 256 * 256;
-            number += vector.Y * 256;
-            number += vector.Z;
-            return (int)number;
-        }
-
         void AddPrimitives()
         {
             //Specular bollen met een kleur

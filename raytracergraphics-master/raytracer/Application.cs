@@ -22,11 +22,11 @@ namespace Template
             t = new Stopwatch();
             oneThousandth = (double)(1m / 1000m);
         }
-        public void Visualize()
+        public void Visualize(List<Primitive> primitiveList)
         {
             t.Reset();
             t.Start();
-            raytracer.Render();
+            raytracer.Render(primitiveList);
             double timeElapsedMilliseconds = t.Elapsed.TotalMilliseconds;
             t.Stop();
             HandleInput(timeElapsedMilliseconds);

@@ -40,8 +40,20 @@ namespace Template
             cameraPositionX = TX(camera.position.X, centerX);
             cameraPositionY = TY(camera.position.Z, centerY);
         }
-        public void Render()
+        public void Render(List<Primitive> primitiveList)
         {
+            foreach (Primitive primitive in primitiveList)
+            {
+                if (primitive is Sphere)
+                {
+                    Sphere sphere = primitive as Sphere;
+                    for (int i = 0; i < 100; i++)
+                    {
+                        display.Line(TX((float)(Math.Cos(i / (2 * Math.PI)) + sphere.position.X), centerX), TY((float)(Math.Sin(i / (2 * Math.PI)) + sphere.position.Z), centerY), TX((float)(Math.Cos((i + 1) / (2 * Math.PI)) + sphere.position.X), centerX), TY((float)(Math.Sin((i + 1) / (2 * Math.PI)) + sphere.position.Z), centerY), ConvertToColor(sphere.color));
+                    }
+                }
+            }
+
             for (int x = 0; x < halfDisplayWidth; x++)
                 for (int y = 0; y < display.height; y++)
                 {
@@ -122,5 +134,15 @@ namespace Template
         {
             return (int)((-y + worldY) * (display.height / (2 * worldY)) - (-centerY + ((float)display.height / 2)));
         }
+
+        public int ConvertToColor(Vector3 vector)
+        {
+            float number = 0;
+            number += vector.X * 256 * 256;
+            number += vector.Y * 256;
+            number += vector.Z;
+            return (int)number * 255;
+        }
+
     }
 }
